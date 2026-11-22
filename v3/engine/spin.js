@@ -1,6 +1,6 @@
 import { planStop } from "./geometry.js";
 import { CONFIG } from "../config.js";
-export function createSpinEngine({api,store,animate,showResult}){
+export function createSpinEngine({api,store,animate,showResult,onPlan=()=>{}}){
   let rotation=0,activeKey=null;
   async function spin(){
     if(store.get().phase!=="idle")return;
@@ -10,6 +10,7 @@ export function createSpinEngine({api,store,animate,showResult}){
       const result=await api.spin(key);
       const jitter=(Math.random()*2-1)*11,turns=5+Math.floor(Math.random()*4);
       const target=planStop(rotation,result.sectorIndex,turns,jitter);
+      onPlan({sectorIndex:result.sectorIndex,finalRotation:target,jitter,turns});
       store.set({phase:"spinning",state:result.state});
       await animate(rotation,target,CONFIG.spinDuration);
       rotation=target;store.set({phase:"settling"});

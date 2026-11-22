@@ -5,10 +5,14 @@ import { createSpinEngine } from "./engine/spin.js";
 import { renderWheel } from "./ui/wheel.js";
 import { sectorAtRotation,angularDistanceToBoundary } from "./engine/geometry.js";
 export async function mount(root,overlayRoot){
-  const debug=new URLSearchParams(location.search).get("debug")==="1";
+  const params=new URLSearchParams(location.search);
+  const demo=params.get("demo")==="1"||location.pathname.endsWith("/v3/demo.html");
+  const debug=demo||params.get("debug")==="1";
   root.innerHTML=`<section class="gw-shell"><h1 class="gw-title">Колесо добрых предсказаний</h1><p class="gw-subtitle">Поверните волшебное колесо и откройте доброе послание!</p><div class="gw-stage"><div class="gw-pointer"></div><div class="gw-wheel">${renderWheel(debug)}</div></div><button class="gw-button" type="button">✦ КРУТИТЬ КОЛЕСО ✦</button><div class="gw-status" aria-live="polite">Загрузка...</div><div class="gw-error" role="alert"></div><div class="gw-debug"></div></section>`;
   const wheel=root.querySelector(".gw-wheel"),button=root.querySelector("button"),status=root.querySelector(".gw-status"),error=root.querySelector(".gw-error"),debugEl=root.querySelector(".gw-debug");
-  const api=createApi(),store=createStore({phase:"idle",state:await api.getState(),error:""});
+  const clock=()=>Date.now()+(demo?Number(sessionStorage.getItem("gw-v3-demo-clock-offset")||0):0);
+  const api=demo?createApi({now:clock}):createApi();
+  const store=createStore({phase:"idle",state:await api.getState(),error:""});
   const unsubscribe=store.subscribe(value=>{
     button.disabled=value.phase!=="idle"||!value.state?.available;
     status.textContent=`Использовано: ${value.state?.used??0} из 5. Доступно: ${value.state?.available??0}.`+(value.state?.nextUnlockAt?` Ещё вращения после ${new Date(value.state.nextUnlockAt).toLocaleTimeString("ru-RU",{timeZone:CONFIG.dayZone,hour:"2-digit",minute:"2-digit"})} (Корея).`:"");
@@ -33,10 +37,12 @@ export async function mount(root,overlayRoot){
     const motion=wheel.animate([{transform:`rotate(${from}deg)`},{transform:`rotate(${to}deg)`}],{duration:ms,easing:"cubic-bezier(.12,.6,.1,1)",fill:"forwards"});
     await motion.finished;
     wheel.style.transform=`rotate(${to}deg)`;motion.cancel();
-    if(debug)debugEl.textContent=`Сектор: ${sectorAtRotation(to)}; до границы: ${angularDistanceToBoundary(to).toFixed(2)}°`;
+    if(debug)debugEl.textContent+=`; фактически под указателем: ${sectorAtRotation(to)}; до границы: ${angularDistanceToBoundary(to).toFixed(2)}°`;
   }
-  const engine=createSpinEngine({api,store,animate,showResult});
+  const engine=createSpinEngine({api,store,animate,showResult,onPlan:({sectorIndex,finalRotation})=>{
+    if(debug)debugEl.textContent=`API sectorIndex: ${sectorIndex}; finalRotation: ${finalRotation.toFixed(4)}°; под указателем: ${sectorAtRotation(finalRotation)}`;
+  }});
   button.addEventListener("click",engine.spin);
-  if(debug)debugEl.textContent="DEBUG: геометрия 12 × 30°";
+  if(debug)debugEl.textContent="DEBUG: геометрия 12 × 30°; ожидание ответа mock API";
   return ()=>{unsubscribe();root.replaceChildren();overlayRoot.replaceChildren();};
 }

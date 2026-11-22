@@ -46,4 +46,4 @@ export function createMockApi({now=()=>Date.now(),storage=globalThis.localStorag
     async history(limit=20,offset=0){return load().history.slice(offset,offset+limit);}
   };
 }
-export function createApi(){if(CONFIG.apiMode!=="mock")throw Error("Supabase API will be implemented in stage 5");return createMockApi();}
+export function createApi(options){if(CONFIG.apiMode!=="mock")throw Error("Supabase API will be implemented in stage 5");return createMockApi(options);}

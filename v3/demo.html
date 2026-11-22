@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Колесо v3 - демо этапа 1c</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif}
+*{box-sizing:border-box}body{margin:0;background:#100b24;color:#fff3ce;overflow-x:hidden}
+main{max-width:500px;margin:auto;padding:12px 10px 28px}
+h1{font-size:clamp(19px,6vw,27px);margin:8px 0 6px}p{font-size:13px;line-height:1.5}
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.tools button{min-width:0;min-height:48px;padding:8px;border:1px solid #e6c078;border-radius:12px;background:#392051;color:#fff3ce;font:600 13px system-ui;cursor:pointer}
+#clock{font:12px ui-monospace,monospace;overflow-wrap:anywhere;color:#a8eaf2}
+#gw-root{width:100%}
+</style>
+</head>
+<body><main>
+<h1>Колесо v3 - демо геометрии</h1>
+<p>Реальные модули v3, mock API. Debug-сетка и номера секторов включены. Сдвиг времени действует только в демо, не меняет часы телефона.</p>
+<div class="tools"><button id="reset" type="button">Сбросить состояние</button><button id="advance" type="button">Сдвинуть время -60 мин</button></div>
+<div id="clock"></div>
+<div id="gw-root"></div>
+<p>Демо использует только ключ <code>good-wheel-v3-mock</code>. Призовых вращений здесь нет.</p>
+</main>
+<script>
+(function(){
+  const key="gw-v3-demo-clock-offset";
+  const offset=Number(sessionStorage.getItem(key)||0);
+  document.getElementById("clock").textContent="Тестовое время (Asia/Seoul): "+new Date(Date.now()+offset).toLocaleString("ru-RU",{timeZone:"Asia/Seoul"});
+  document.getElementById("reset").onclick=()=>{localStorage.removeItem("good-wheel-v3-mock");sessionStorage.removeItem(key);location.reload();};
+  document.getElementById("advance").onclick=()=>{sessionStorage.setItem(key,String(offset+60*60000));location.reload();};
+})();
+</script>
+<script type="module" src="./loader.js"></script>
+</body></html>
