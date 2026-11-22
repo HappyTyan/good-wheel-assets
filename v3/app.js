@@ -13,14 +13,19 @@ export async function mount(root,overlayRoot){
   const clock=()=>Date.now()+(demo?Number(sessionStorage.getItem("gw-v3-demo-clock-offset")||0):0);
   const api=demo?createApi({now:clock}):createApi();
   const store=createStore({phase:"idle",state:await api.getState(),error:""});
+  let lastState=null;
+  const refreshUnlock=()=>{if(!lastState)return;unlock.textContent=lastState.nextUnlockAt?"Ещё 2 вращения через "+Math.max(0,Math.ceil((new Date(lastState.nextUnlockAt).getTime()-clock())/60000))+" мин":"";};
   const unsubscribe=store.subscribe(value=>{
+    lastState=value.state;
     button.disabled=value.phase!=="idle"||!value.state?.available;
+    button.textContent=value.phase==="idle"&&!value.state?.available?(value.state?.nextUnlockAt?"ОЖИДАНИЕ ВРАЩЕНИЙ":"НА СЕГОДНЯ ВСЁ"):"КРУТИТЬ КОЛЕСО";
     status.textContent=`Использовано: ${value.state?.used??0} из 5. Доступно: ${value.state?.available??0}.`+(value.state?.nextUnlockAt?` Ещё вращения после ${new Date(value.state.nextUnlockAt).toLocaleTimeString("ru-RU",{timeZone:CONFIG.dayZone,hour:"2-digit",minute:"2-digit"})} (Корея).`:"");
     error.textContent=value.error||"";
     const used=value.state?.used??0,available=value.state?.available??0;
-    tokens.forEach((token,i)=>{token.classList.toggle("gw-token-used",i<used);token.classList.toggle("gw-token-locked",i>=used+available);});
-    unlock.textContent=value.state?.nextUnlockAt?"Откроются через "+Math.max(0,Math.ceil((new Date(value.state.nextUnlockAt).getTime()-clock())/60000))+" мин":"";
+    tokens.forEach((token,i)=>{token.classList.toggle("gw-token-used",i<used);token.classList.toggle("gw-token-locked",i>=used+available);token.setAttribute("aria-label",i<used?"Использовано":i>=used+available?"Заблокировано":"Доступно");});
+    refreshUnlock();
   });
+  const unlockTimer=setInterval(refreshUnlock,15000);
   function showResult(prediction){
     return new Promise(resolve=>{
       const panel=document.createElement("div");panel.className="gw-overlay-host";
@@ -59,5 +64,5 @@ export async function mount(root,overlayRoot){
   }});
   button.addEventListener("click",engine.spin);
   if(debug)debugEl.textContent="DEBUG: геометрия 12 × 30°; ожидание ответа mock API";
-  return ()=>{unsubscribe();root.replaceChildren();overlayRoot.replaceChildren();};
+  return ()=>{clearInterval(unlockTimer);unsubscribe();root.replaceChildren();overlayRoot.replaceChildren();};
 }
