@@ -6,7 +6,7 @@ import { renderWheel } from "./ui/wheel.js";
 import { sectorAtRotation,angularDistanceToBoundary } from "./engine/geometry.js";
 export async function mount(root,overlayRoot){
   const params=new URLSearchParams(location.search);
-  const demo=params.get("demo")==="1";
+  const demo=params.get("demo")==="1"||location.pathname.endsWith("/v3/demo.html");
   const debug=demo||params.get("debug")==="1";
   root.innerHTML=`<section class="gw-shell"><h1 class="gw-title">Колесо добрых предсказаний</h1><p class="gw-subtitle">Поверните волшебное колесо и откройте доброе послание!</p><div class="gw-stage"><div class="gw-pointer"></div><div class="gw-wheel">${renderWheel(debug)}</div></div><button class="gw-button" type="button">✦ КРУТИТЬ КОЛЕСО ✦</button><div class="gw-status" aria-live="polite">Загрузка...</div><div class="gw-error" role="alert"></div><div class="gw-debug"></div></section>`;
   const wheel=root.querySelector(".gw-wheel"),button=root.querySelector("button"),status=root.querySelector(".gw-status"),error=root.querySelector(".gw-error"),debugEl=root.querySelector(".gw-debug");
@@ -37,7 +37,7 @@ export async function mount(root,overlayRoot){
     const motion=wheel.animate([{transform:`rotate(${from}deg)`},{transform:`rotate(${to}deg)`}],{duration:ms,easing:"cubic-bezier(.12,.6,.1,1)",fill:"forwards"});
     await motion.finished;
     wheel.style.transform=`rotate(${to}deg)`;motion.cancel();
-    if(debug)debugEl.textContent=`Сектор: ${sectorAtRotation(to)}; до границы: ${angularDistanceToBoundary(to).toFixed(2)}°`;
+    if(debug)debugEl.textContent+=`; фактически под указателем: ${sectorAtRotation(to)}; до границы: ${angularDistanceToBoundary(to).toFixed(2)}°`;
   }
   const engine=createSpinEngine({api,store,animate,showResult,onPlan:({sectorIndex,finalRotation})=>{
     if(debug)debugEl.textContent=`API sectorIndex: ${sectorIndex}; finalRotation: ${finalRotation.toFixed(4)}°; под указателем: ${sectorAtRotation(finalRotation)}`;
