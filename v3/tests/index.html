@@ -34,6 +34,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;line-height:1.5}
 import {SECTOR_COUNT,SECTOR_ANGLE,CONFIG} from "../config.js";
 import {start,center,planStop,sectorAtRotation,angularDistanceToBoundary,normalize} from "../engine/geometry.js";
 import {createMockApi} from "../services/api.js";
+import {renderWheel} from "../ui/wheel.js";
 const results=document.getElementById("results"),summary=document.getElementById("summary");
 let passed=0,total=0;
 function report(title,ok,detail){
@@ -109,6 +110,38 @@ async function run(){
     assert(before.used===1&&after.used===0&&after.available===3&&before.day!==after.day,"KST reset failed");
     report("Mock API: полночь Asia/Seoul",true,before.day+" → "+after.day+"; использовано "+before.used+" → "+after.used);
   }catch(error){report("Mock API: полночь Asia/Seoul",false,error.message);}
+  // Render the actual SVG into the DOM, then measure fill endpoints, lines and label centers.
+  const renderErrors=[];
+  const fixture=document.createElement("div");
+  fixture.style.cssText="position:absolute;left:-10000px;top:0;width:100px;height:100px";
+  fixture.innerHTML=renderWheel(true);
+  document.body.append(fixture);
+  const angleOf=(x,y)=>normalize(Math.atan2(y-50,x-50)*180/Math.PI+90);
+  const angleGap=(a,b)=>Math.abs(((a-b+540)%360)-180);
+  const check=(condition,message)=>{if(!condition&&renderErrors.length<5)renderErrors.push(message);};
+  for(let i=0;i<SECTOR_COUNT;i++){
+    const fill=fixture.querySelector(`.gw-sector-fill[data-sector="${i}"]`);
+    const line=fixture.querySelector(`.gw-sector-line[data-sector="${i}"]`);
+    const icon=fixture.querySelector(`.gw-sector-icon[data-sector="${i}"]`);
+    check(Boolean(fill&&line&&icon),"sector "+i+": missing SVG element");
+    if(!fill||!line||!icon)continue;
+    for(const el of [fill,line,icon]){
+      check(Math.abs(Number(el.dataset.start)-start(i))<=.01,"sector "+i+": data-start mismatch");
+      check(Math.abs(Number(el.dataset.center)-center(i))<=.01,"sector "+i+": data-center mismatch");
+    }
+    const d=fill.getAttribute("d");
+    const coords=d.match(/-?\d+(?:\.\d+)?(?:e[+-]?\d+)?/gi)?.map(Number)||[];
+    // sectorPath: M 50 50 L x1 y1 A r r 0 0 1 x2 y2 Z
+    check(coords.length===11,"sector "+i+": unexpected SVG path format");
+    if(coords.length===11){
+      check(angleGap(angleOf(coords[2],coords[3]),start(i))<=.01,"sector "+i+": fill start angle");
+      check(angleGap(angleOf(coords[9],coords[10]),start(i)+SECTOR_ANGLE)<=.01,"sector "+i+": fill end angle");
+    }
+    check(angleGap(angleOf(Number(line.getAttribute("x2")),Number(line.getAttribute("y2"))),start(i))<=.01,"sector "+i+": line angle");
+    check(angleGap(angleOf(Number(icon.getAttribute("x")),Number(icon.getAttribute("y"))),center(i))<=.01,"sector "+i+": icon angle");
+  }
+  fixture.remove();
+  report("Отрисовка SVG: заливки, линии, номера",renderErrors.length===0,renderErrors.length?renderErrors.join("\n"):"12 секторов: все углы совпадают с geometry.js, допуск 0.01°");
   summary.className="summary "+(passed===total?"pass":"fail");
   summary.textContent=(passed===total?"PASS ":"FAIL ")+passed+"/"+total+" проверок";
 }
