@@ -14,7 +14,7 @@ export async function mount(root,overlayRoot){
   const api=demo?createApi({now:clock}):createApi();
   const store=createStore({phase:"idle",state:await api.getState(),error:""});
   let lastState=null;
-  const refreshUnlock=()=>{if(!lastState)return;unlock.textContent=lastState.nextUnlockAt?"Ещё 2 вращения через "+Math.max(0,Math.ceil((new Date(lastState.nextUnlockAt).getTime()-clock())/60000))+" мин":"";};
+  const refreshUnlock=()=>{if(!lastState)return;const remaining=lastState.nextUnlockAt?Math.max(0,Math.ceil((new Date(lastState.nextUnlockAt).getTime()-clock())/1000)):0;const minutes=Math.floor(remaining/60),seconds=remaining%60;unlock.textContent=lastState.nextUnlockAt?"Ещё 2 вращения через "+String(minutes).padStart(2,"0")+":"+String(seconds).padStart(2,"0"):"";};
   const unsubscribe=store.subscribe(value=>{
     lastState=value.state;
     button.disabled=value.phase!=="idle"||!value.state?.available;
@@ -25,7 +25,7 @@ export async function mount(root,overlayRoot){
     tokens.forEach((token,i)=>{token.classList.toggle("gw-token-used",i<used);token.classList.toggle("gw-token-locked",i>=used+available);token.setAttribute("aria-label",i<used?"Использовано":i>=used+available?"Заблокировано":"Доступно");});
     refreshUnlock();
   });
-  const unlockTimer=setInterval(refreshUnlock,15000);
+  const unlockTimer=setInterval(refreshUnlock,1000);
   function showResult(prediction){
     return new Promise(resolve=>{
       const panel=document.createElement("div");panel.className="gw-overlay-host";
