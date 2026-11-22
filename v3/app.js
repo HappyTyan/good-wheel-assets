@@ -15,11 +15,12 @@ export async function mount(root,overlayRoot){
   const store=createStore({phase:"idle",state:await api.getState(),error:""});
   const unsubscribe=store.subscribe(value=>{
     button.disabled=value.phase!=="idle"||!value.state?.available;
+    button.textContent=value.phase==="idle"&&!value.state?.available?(value.state?.nextUnlockAt?"ОЖИДАНИЕ ВРАЩЕНИЙ":"НА СЕГОДНЯ ВСЁ"):"КРУТИТЬ КОЛЕСО";
     status.textContent=`Использовано: ${value.state?.used??0} из 5. Доступно: ${value.state?.available??0}.`+(value.state?.nextUnlockAt?` Ещё вращения после ${new Date(value.state.nextUnlockAt).toLocaleTimeString("ru-RU",{timeZone:CONFIG.dayZone,hour:"2-digit",minute:"2-digit"})} (Корея).`:"");
     error.textContent=value.error||"";
     const used=value.state?.used??0,available=value.state?.available??0;
-    tokens.forEach((token,i)=>{token.classList.toggle("gw-token-used",i<used);token.classList.toggle("gw-token-locked",i>=used+available);});
-    unlock.textContent=value.state?.nextUnlockAt?"Откроются через "+Math.max(0,Math.ceil((new Date(value.state.nextUnlockAt).getTime()-clock())/60000))+" мин":"";
+    tokens.forEach((token,i)=>{token.classList.toggle("gw-token-used",i<used);token.classList.toggle("gw-token-locked",i>=used+available);token.setAttribute("aria-label",i<used?"Использовано":i>=used+available?"Заблокировано":"Доступно");});
+    unlock.textContent=value.state?.nextUnlockAt?"Ещё 2 вращения через "+Math.max(0,Math.ceil((new Date(value.state.nextUnlockAt).getTime()-clock())/60000))+" мин":"";
   });
   function showResult(prediction){
     return new Promise(resolve=>{
