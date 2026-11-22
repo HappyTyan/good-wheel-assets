@@ -8,8 +8,8 @@ export async function mount(root,overlayRoot){
   const params=new URLSearchParams(location.search);
   const demo=params.get("demo")==="1"||location.pathname.endsWith("/v3/demo.html");
   const debug=demo||params.get("debug")==="1";
-  root.innerHTML=`<section class="gw-shell"><h1 class="gw-title">Колесо добрых предсказаний</h1><p class="gw-subtitle">Поверните волшебное колесо и откройте доброе послание!</p><div class="gw-stage"><div class="gw-pointer"></div><div class="gw-wheel">${renderWheel(debug)}</div></div><button class="gw-button" type="button">✦ КРУТИТЬ КОЛЕСО ✦</button><div class="gw-status" aria-live="polite">Загрузка...</div><div class="gw-error" role="alert"></div><div class="gw-debug"></div></section>`;
-  const wheel=root.querySelector(".gw-wheel"),button=root.querySelector("button"),status=root.querySelector(".gw-status"),error=root.querySelector(".gw-error"),debugEl=root.querySelector(".gw-debug");
+  root.innerHTML=`<section class="gw-shell"><div class="gw-scene" aria-hidden="true"><span class="gw-forest"></span><span class="gw-lantern gw-lantern-left"></span><span class="gw-lantern gw-lantern-right"></span><span class="gw-orb"></span><span class="gw-cat"></span></div><header class="gw-header"><div class="gw-ribbon"><h1 class="gw-title">Колесо добрых предсказаний</h1></div><p class="gw-subtitle">Поверните волшебное колесо и откройте доброе послание!</p></header><div class="gw-stage"><div class="gw-pointer"></div><div class="gw-wheel">${renderWheel(debug)}</div><div class="gw-stand" aria-hidden="true"></div></div><div class="gw-play"><button class="gw-button" type="button">КРУТИТЬ КОЛЕСО</button><div class="gw-tokens" aria-label="Пять вращений в сутки"><span class="gw-token" aria-hidden="true"></span><span class="gw-token" aria-hidden="true"></span><span class="gw-token" aria-hidden="true"></span><span class="gw-token" aria-hidden="true"></span><span class="gw-token" aria-hidden="true"></span><span class="gw-unlock" aria-hidden="true"></span></div><div class="gw-status" aria-live="polite">Загрузка...</div><div class="gw-error" role="alert"></div></div><nav class="gw-actions" aria-label="Разделы игры"><button class="gw-prizes" type="button" disabled title="Будущий модуль">Призы от партнёров <span class="gw-badge">скоро</span></button><button class="gw-history" type="button">Мои предсказания</button></nav><div class="gw-banner" aria-label="Место для баннера партнёра"><span>Место для партнёрского баннера</span></div><div class="gw-debug"></div></section>`;
+  const wheel=root.querySelector(".gw-wheel"),button=root.querySelector(".gw-button"),status=root.querySelector(".gw-status"),error=root.querySelector(".gw-error"),debugEl=root.querySelector(".gw-debug"),tokens=[...root.querySelectorAll(".gw-token")],unlock=root.querySelector(".gw-unlock"),historyButton=root.querySelector(".gw-history");
   const clock=()=>Date.now()+(demo?Number(sessionStorage.getItem("gw-v3-demo-clock-offset")||0):0);
   const api=demo?createApi({now:clock}):createApi();
   const store=createStore({phase:"idle",state:await api.getState(),error:""});
@@ -17,6 +17,9 @@ export async function mount(root,overlayRoot){
     button.disabled=value.phase!=="idle"||!value.state?.available;
     status.textContent=`Использовано: ${value.state?.used??0} из 5. Доступно: ${value.state?.available??0}.`+(value.state?.nextUnlockAt?` Ещё вращения после ${new Date(value.state.nextUnlockAt).toLocaleTimeString("ru-RU",{timeZone:CONFIG.dayZone,hour:"2-digit",minute:"2-digit"})} (Корея).`:"");
     error.textContent=value.error||"";
+    const used=value.state?.used??0,available=value.state?.available??0;
+    tokens.forEach((token,i)=>{token.classList.toggle("gw-token-used",i<used);token.classList.toggle("gw-token-locked",i>=used+available);});
+    unlock.textContent=value.state?.nextUnlockAt?"Откроются через "+Math.max(0,Math.ceil((new Date(value.state.nextUnlockAt).getTime()-clock())/60000))+" мин":"";
   });
   function showResult(prediction){
     return new Promise(resolve=>{
@@ -31,6 +34,18 @@ export async function mount(root,overlayRoot){
       overlayRoot.append(panel);
     });
   }
+  historyButton.addEventListener("click",async()=>{
+    try{
+      const entries=await api.history(20,0);
+      const panel=document.createElement("div");panel.className="gw-overlay-host";
+      const dialog=document.createElement("section");dialog.className="gw-result gw-history-dialog";dialog.setAttribute("role","dialog");dialog.setAttribute("aria-modal","true");
+      const heading=document.createElement("h2");heading.textContent="Мои предсказания";dialog.append(heading);
+      const list=document.createElement("div");list.className="gw-history-list";
+      if(!entries.length){const empty=document.createElement("p");empty.textContent="Пока нет предсказаний.";list.append(empty);}
+      for(const entry of entries){const item=document.createElement("article");const title=document.createElement("strong");title.textContent=entry.title||"Предсказание";const detail=document.createElement("p");detail.textContent=entry.text||"";item.append(title,detail);list.append(item);}
+      dialog.append(list);const close=document.createElement("button");close.type="button";close.textContent="Закрыть";close.addEventListener("click",()=>panel.remove(),{once:true});dialog.append(close);panel.append(dialog);overlayRoot.append(panel);
+    }catch(err){error.textContent=err.message||"Не удалось открыть историю";}
+  });
   async function animate(from,to,duration){
     const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
     const ms=reduced?350:duration;

@@ -1,0 +1,144 @@
+{
+  "version": "3.0.0-stage2a",
+  "canvas": {
+    "width": 1024,
+    "height": 1536,
+    "aspectRatio": "2 / 3"
+  },
+  "note": "Future optional artwork. Stage 2a renders CSS/SVG placeholders; no files are loaded from this manifest yet.",
+  "coordinateSystem": "Percentages relative to 1024x1536 design canvas; wheel geometry stays in engine/geometry.js.",
+  "layers": [
+    {
+      "file": "forest-frame.webp",
+      "x": 0,
+      "y": 0,
+      "width": 100,
+      "height": 100,
+      "zIndex": 0,
+      "transparent": false,
+      "format": "webp",
+      "maxKB": 160
+    },
+    {
+      "file": "ribbon.webp",
+      "x": 7,
+      "y": 3,
+      "width": 86,
+      "height": 13,
+      "zIndex": 3,
+      "transparent": true,
+      "format": "webp",
+      "maxKB": 35
+    },
+    {
+      "file": "wheel-rim.webp",
+      "x": 11,
+      "y": 28,
+      "width": 78,
+      "height": 52,
+      "zIndex": 7,
+      "transparent": true,
+      "format": "webp",
+      "maxKB": 55
+    },
+    {
+      "file": "wheel-hub.webp",
+      "x": 43,
+      "y": 49,
+      "width": 14,
+      "height": 9,
+      "zIndex": 10,
+      "transparent": true,
+      "format": "webp",
+      "maxKB": 15
+    },
+    {
+      "file": "crystal-pointer.webp",
+      "x": 46,
+      "y": 26,
+      "width": 8,
+      "height": 6,
+      "zIndex": 11,
+      "transparent": true,
+      "format": "webp",
+      "maxKB": 10
+    },
+    {
+      "file": "wheel-stand.webp",
+      "x": 36,
+      "y": 70,
+      "width": 28,
+      "height": 12,
+      "zIndex": 4,
+      "transparent": true,
+      "format": "webp",
+      "maxKB": 25
+    },
+    {
+      "file": "cat-pillow.webp",
+      "x": 71,
+      "y": 68,
+      "width": 24,
+      "height": 12,
+      "zIndex": 5,
+      "transparent": true,
+      "format": "webp",
+      "maxKB": 40
+    },
+    {
+      "file": "orb-books.webp",
+      "x": 5,
+      "y": 66,
+      "width": 24,
+      "height": 14,
+      "zIndex": 5,
+      "transparent": true,
+      "format": "webp",
+      "maxKB": 40
+    },
+    {
+      "file": "lantern-left.webp",
+      "x": 4,
+      "y": 35,
+      "width": 10,
+      "height": 16,
+      "zIndex": 4,
+      "transparent": true,
+      "format": "webp",
+      "maxKB": 20
+    },
+    {
+      "file": "lantern-right.webp",
+      "x": 86,
+      "y": 35,
+      "width": 10,
+      "height": 16,
+      "zIndex": 4,
+      "transparent": true,
+      "format": "webp",
+      "maxKB": 20
+    },
+    {
+      "file": "button.webp",
+      "x": 6,
+      "y": 81,
+      "width": 88,
+      "height": 8,
+      "zIndex": 5,
+      "transparent": true,
+      "format": "webp",
+      "maxKB": 25
+    },
+    {
+      "file": "sector-icons.webp",
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0,
+      "zIndex": 8,
+      "transparent": true,
+      "format": "webp",
+      "maxKB": 45
+    }
+  ]
+}
