@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Good Wheel v3 - Browser Tests</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif}
+*{box-sizing:border-box}body{margin:0;background:#110d25;color:#f4e9ff;padding:16px}
+main{max-width:700px;margin:auto}h1{font-size:clamp(22px,6vw,32px);line-height:1.15}
+p{line-height:1.5}.summary{font-size:clamp(28px,9vw,48px);font-weight:800;overflow-wrap:anywhere}
+.pass{color:#74f0a2}.fail{color:#ff7c8c}.card{background:#241b3d;border:1px solid #594a76;border-radius:14px;padding:14px;margin:12px 0}
+.card h2{font-size:18px;margin:0 0 8px}.value{font-size:24px;font-weight:700}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;line-height:1.5}
+.small{font-size:13px;color:#d2c5e4}.examples{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.example{text-align:center;width:125px}.disk{width:108px;height:108px;border:2px solid #e5b866;border-radius:50%;position:relative;margin:12px auto;background:conic-gradient(from 0deg,#9d56b9 0deg 30deg,#4879bf 30deg 60deg,#2c906c 60deg 90deg,#c38c45 90deg 120deg,#9d56b9 120deg 150deg,#4879bf 150deg 180deg,#2c906c 180deg 210deg,#c38c45 210deg 240deg,#9d56b9 240deg 270deg,#4879bf 270deg 300deg,#2c906c 300deg 330deg,#c38c45 330deg 360deg)}
+.disk:before{content:"";position:absolute;top:-12px;left:calc(50% - 7px);border-left:7px solid transparent;border-right:7px solid transparent;border-top:15px solid #ffdf77;z-index:2}
+.disk span{position:absolute;top:4px;left:50%;font-size:12px}.disk.rotated{transform:rotate(30deg)}
+</style>
+</head>
+<body>
+<main>
+<h1>Колесо v3 - проверка в браузере</h1>
+<p class="small">Используются реальные модули проекта. Тест не изменяет localStorage и системные часы.</p>
+<div id="summary" class="summary">Выполняется...</div>
+<div id="results" aria-live="polite"></div>
+<section class="card">
+<h2>Направление CSS rotate</h2>
+<p class="small">Сектор 0 начинается у верхней границы. Указатель находится на границе в покое, поэтому формула назначает сектор 0. После +30° под указателем оказывается сектор 11.</p>
+<div class="examples"><div class="example"><div class="disk"><span>0</span></div><strong>rotate(0deg)</strong></div><div class="example"><div class="disk rotated"><span>0</span></div><strong>rotate(30deg)</strong></div></div>
+</section>
+</main>
+<script type="module">
+import {SECTOR_COUNT,SECTOR_ANGLE,CONFIG} from "../config.js";
+import {start,center,planStop,sectorAtRotation,angularDistanceToBoundary,normalize} from "../engine/geometry.js";
+import {createMockApi} from "../services/api.js";
+const results=document.getElementById("results"),summary=document.getElementById("summary");
+let passed=0,total=0;
+function report(title,ok,detail){
+  total++;if(ok)passed++;
+  const section=document.createElement("section");section.className="card";
+  const heading=document.createElement("h2");heading.textContent=title;
+  const status=document.createElement("div");status.className="value "+(ok?"pass":"fail");status.textContent=ok?"PASS":"FAIL";
+  const info=document.createElement("pre");info.textContent=detail;
+  section.append(heading,status,info);results.append(section);
+}
+function assert(condition,message){if(!condition)throw Error(message);}
+function memoryStorage(){
+  const map=new Map();
+  return {getItem:key=>map.has(key)?map.get(key):null,setItem:(key,value)=>map.set(key,String(value))};
+}
+async function run(){
+  const errors=[];let successful=0,minDistance=Infinity;
+  for(let i=0;i<1000;i++){
+    const sector=i%SECTOR_COUNT;
+    const currentRotation=(i*137.23)%360;
+    const jitter=((i*37)%2201)/100-11;
+    try{
+      const finalRotation=planStop(currentRotation,sector,5+i%4,jitter);
+      const actual=sectorAtRotation(finalRotation);
+      const margin=angularDistanceToBoundary(finalRotation);
+      minDistance=Math.min(minDistance,margin);
+      if(actual!==sector||margin<3-1e-8)throw Error("expected "+sector+", actual "+actual+", margin "+margin);
+      successful++;
+    }catch(error){if(errors.length<5)errors.push("test "+i+": "+error.message);}
+  }
+  report("1000 вращений",successful===1000, (successful===1000?"PASS 1000/1000":"FAIL "+(1000-successful)+"/1000")+(errors.length?"\n"+errors.join("\n"):""));
+  report("Минимальное расстояние до границы",minDistance>=3-1e-8,Number.isFinite(minDistance)?minDistance.toFixed(4)+"° (норма >= 3°)":"Нет успешных вращений");
+  const geometryErrors=[];
+  for(let i=0;i<SECTOR_COUNT;i++){
+    if(start(i)!==30*i)geometryErrors.push("start("+i+")");
+    if(center(i)!==30*i+15)geometryErrors.push("center("+i+")");
+    if(i>0&&start(i)!==start(i-1)+SECTOR_ANGLE)geometryErrors.push("gap/overlap "+i);
+  }
+  if(SECTOR_COUNT!==12||SECTOR_ANGLE!==30||start(0)!==0||start(11)+SECTOR_ANGLE!==360)geometryErrors.push("360° coverage");
+  report("12 секторов: границы, центры, покрытие",geometryErrors.length===0,geometryErrors.length?geometryErrors.join("\n"):"12 × 30° = 360°. Разрывов и пересечений нет.");
+  const direction=sectorAtRotation(0)===0&&sectorAtRotation(30)===11&&sectorAtRotation(60)===10&&normalize(360-center(11))===15;
+  report("Поворот по часовой стрелке",direction,"rotate(0°) → "+sectorAtRotation(0)+"; rotate(+30°) → "+sectorAtRotation(30)+"; rotate(+60°) → "+sectorAtRotation(60));
+  try{
+    let time=Date.parse("2026-11-23T10:00:00+09:00");
+    const api=createMockApi({now:()=>time,storage:memoryStorage()});
+    const initial=await api.getState();
+    for(let i=0;i<3;i++)await api.spin("immediate-"+i);
+    const after=await api.getState();
+    assert(initial.available===3&&after.used===3&&after.available===0,"immediate availability incorrect");
+    report("Mock API: три вращения сразу",true,"Сначала доступно: "+initial.available+"; использовано: "+after.used+"; осталось: "+after.available);
+    let blocked=false;
+    try{await api.spin("fourth-before-unlock");}catch{blocked=true;}
+    time+=59*60000;
+    const before=await api.getState();
+    assert(blocked&&before.available===0&&before.nextUnlockAt!==null,"fourth spin unlocked too early");
+    time+=60000;
+    const unlocked=await api.getState();
+    assert(unlocked.available===2,"two spins not unlocked after 60 minutes");
+    await api.spin("fourth-after-unlock");
+    const afterFourth=await api.getState();
+    assert(afterFourth.used===4&&afterFourth.available===1,"fourth spin failed");
+    report("Mock API: блокировка и +60 минут",true,"До 60 минут: 0 доступно. После 60 минут: 2. После 4-го: "+afterFourth.available);
+  }catch(error){
+    report("Mock API: лимит и таймер",false,error.message);
+  }
+  try{
+    let time=Date.parse("2026-11-23T23:59:00+09:00");
+    const api=createMockApi({now:()=>time,storage:memoryStorage()});
+    await api.spin("before-midnight");
+    const before=await api.getState();
+    time=Date.parse("2026-11-24T00:00:00+09:00");
+    const after=await api.getState();
+    assert(before.used===1&&after.used===0&&after.available===3&&before.day!==after.day,"KST reset failed");
+    report("Mock API: полночь Asia/Seoul",true,before.day+" → "+after.day+"; использовано "+before.used+" → "+after.used);
+  }catch(error){report("Mock API: полночь Asia/Seoul",false,error.message);}
+  summary.className="summary "+(passed===total?"pass":"fail");
+  summary.textContent=(passed===total?"PASS ":"FAIL ")+passed+"/"+total+" проверок";
+}
+run().catch(error=>{summary.className="summary fail";summary.textContent="FAIL: "+error.message;});
+</script>
+</body>
+</html>
