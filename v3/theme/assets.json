@@ -1,5 +1,5 @@
 {
-  "version": "3.1.0-stage3a",
+  "version": "3.2.0-stage3c",
   "canvas": {
     "width": 1024,
     "height": 1536,
@@ -12,42 +12,42 @@
       "height": 5
     },
     "title": {
-      "top": 6,
-      "height": 5
+      "top": 7,
+      "height": 6
     },
     "ribbon": {
-      "top": 12,
-      "height": 8
+      "top": 14,
+      "height": 5
     },
     "wheel": {
       "centerX": 50,
-      "centerY": 32,
-      "diameterWidth": 46
+      "centerY": 38,
+      "diameterWidth": 56
     },
     "stand": {
-      "top": 45,
-      "height": 6
+      "top": 54,
+      "height": 5
     },
     "spin": {
-      "top": 52,
+      "top": 58,
       "height": 6,
       "width": 86
     },
     "tokens": {
-      "top": 60,
-      "height": 9
-    },
-    "actions": {
-      "top": 71,
-      "height": 4
-    },
-    "banner": {
-      "top": 77,
+      "top": 66,
       "height": 8
     },
+    "actions": {
+      "top": 77,
+      "height": 6
+    },
+    "banner": {
+      "top": 84,
+      "height": 6
+    },
     "rules": {
-      "top": 87,
-      "height": 7
+      "top": 91,
+      "height": 8
     }
   },
   "layers": [
@@ -106,5 +106,5 @@
     }
   ],
   "existingFallback": "v3/img/forest-frame.webp remains the CSS fallback for missing scene.webp",
-  "note": "No new binary artwork included. Missing optional images hide on error; existing CSS/SVG remains. Audio toggle is a placeholder."
+  "note": "Stage 3c adjusts layout and text contrast only. scene.webp still contains oversized baked-in cat, orb, lantern and decorative title: regenerate artwork separately. CSS is runtime source of truth."
 }
