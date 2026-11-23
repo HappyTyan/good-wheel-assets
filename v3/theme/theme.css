@@ -288,7 +288,7 @@
   background: #130c2df0;
   text-shadow: 0 1px 2px #000;
 }
-.gw-sector-sprite { pointer-events: none; }
+.gw-sector-sprite, .gw-sector-icon { transform-box: fill-box; transform-origin: center center; }\n.gw-sector-sprite { pointer-events: none; }
 .gw-icon-sprite { position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none; }
 .gw-art-icons { width: 512px; height: 384px; }
 .gw-debug { position: relative; margin: 10px auto; max-width: 480px; padding: 10px; border: 1px solid #3a6675; border-radius: 8px; background: #10132a; font: 11px/1.4 ui-monospace,monospace; color: #a4efff; overflow-wrap: anywhere; }
