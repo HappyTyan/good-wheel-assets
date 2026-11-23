@@ -32,39 +32,27 @@ export async function mount(root,overlayRoot){
     if (img.complete && img.naturalWidth === 0) img.hidden = true;
   });
   const musicButton = root.querySelector(".gw-music");
-  let audioContext=null, musicTimer=null, musicStep=0;
-  const melody=[261.63,329.63,392,523.25,440,392,329.63,293.66,261.63,329.63,440,392,349.23,329.63,293.66,261.63];
-  function playMusicNote(){
-    if(!audioContext||audioContext.state!=="running")return;
-    const at=audioContext.currentTime,osc=audioContext.createOscillator(),gain=audioContext.createGain();
-    osc.type="sine";osc.frequency.value=melody[musicStep++%melody.length];
-    gain.gain.setValueAtTime(0.0001,at);
-    gain.gain.exponentialRampToValueAtTime(0.075,at+0.07);
-    gain.gain.exponentialRampToValueAtTime(0.0001,at+0.85);
-    osc.connect(gain);gain.connect(audioContext.destination);
-    osc.start(at);osc.stop(at+0.88);
-  }
+  // Approved Suno soundtrack, previously hosted and tested on GitHub Pages.
+  const soundtrack = new Audio("https://happytyan.github.io/good-wheel-assets/background-preview.mp3");
+  soundtrack.loop = true;
+  soundtrack.preload = "none";
+  soundtrack.volume = 0.48;
   musicButton.addEventListener("click", async () => {
     const enabled = musicButton.getAttribute("aria-pressed") !== "true";
-    musicButton.setAttribute("aria-pressed", String(enabled));
-    musicButton.textContent = enabled ? "♫ Музыка: вкл" : "♫ Музыка: выкл";
-    if(enabled){
-      try{
-        const AudioCtx=window.AudioContext||window.webkitAudioContext;
-        if(!AudioCtx)throw new Error("Web Audio недоступен");
-        audioContext ||= new AudioCtx();
-        await audioContext.resume();
-        if(musicTimer)clearInterval(musicTimer);
-        playMusicNote();
-        musicTimer=setInterval(playMusicNote,900);
-      }catch(e){
-        musicButton.setAttribute("aria-pressed","false");
-        musicButton.textContent="♫ Музыка недоступна";
-        console.warn(e);
+    if (enabled) {
+      try {
+        await soundtrack.play();
+        musicButton.setAttribute("aria-pressed", "true");
+        musicButton.textContent = "♫ Музыка: вкл";
+      } catch (error) {
+        musicButton.setAttribute("aria-pressed", "false");
+        musicButton.textContent = "♫ Музыка недоступна";
+        console.warn("Approved soundtrack failed to play", error);
       }
-    }else{
-      if(musicTimer){clearInterval(musicTimer);musicTimer=null;}
-      if(audioContext)await audioContext.suspend();
+    } else {
+      soundtrack.pause();
+      musicButton.setAttribute("aria-pressed", "false");
+      musicButton.textContent = "♫ Музыка: выкл";
     }
   });
 
@@ -142,5 +130,5 @@ export async function mount(root,overlayRoot){
   }});
   button.addEventListener("click",engine.spin);
   if(debug)debugEl.textContent="DEBUG: геометрия 12 × 30°; ожидание ответа mock API";
-  return ()=>{if(musicTimer)clearInterval(musicTimer);audioContext?.close();clearInterval(unlockTimer);unsubscribe();root.replaceChildren();overlayRoot.replaceChildren();};
+  return ()=>{soundtrack.pause();soundtrack.src="";clearInterval(unlockTimer);unsubscribe();root.replaceChildren();overlayRoot.replaceChildren();};
 }
