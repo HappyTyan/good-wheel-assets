@@ -129,13 +129,13 @@
 }
 .gw-wheel { position: relative; z-index: 2; width: 100%; height: 100%; will-change: transform; }
 .gw-wheel-svg { display: block; width: 100%; height: 100%; filter: drop-shadow(0 0 7px #ffbf54) drop-shadow(0 0 2px #ffdd7a); }
-.gw-wheel-rim { position: absolute; inset: -4%; z-index: 1; pointer-events: none; }
+.gw-wheel-rim { position: absolute; inset: -4%; z-index: 3; pointer-events: none; }
 .gw-art-rim { width: 100%; height: 100%; }
-.gw-hub { position: absolute; z-index: 3; left: 50%; top: 50%; width: 22%; aspect-ratio: 1; transform: translate(-50%,-50%); pointer-events: none; }
+.gw-hub { position: absolute; z-index: 4; left: 50%; top: 50%; width: 22%; aspect-ratio: 1; transform: translate(-50%,-50%); pointer-events: none; }
 .gw-art-hub { width: 100%; height: 100%; }
 .gw-pointer {
   position: absolute;
-  z-index: 4;
+  z-index: 5;
   left: 50%;
   top: -10%;
   width: 12%;
@@ -183,7 +183,7 @@
   font: 700 clamp(12px,4.1cqw,21px) Georgia,serif;
   text-shadow: 0 1px 2px #2b003b;
 }
-.gw-spin-area:has(.gw-art-spin:not([hidden])) .gw-button { background: transparent; }
+.gw-spin-area:has(.gw-art-spin:not([hidden])) .gw-button { background: transparent; border-color: transparent; box-shadow: none; }
 .gw-button:disabled {
   cursor: not-allowed;
   background: linear-gradient(#5e4371,#49315c 55%,#2a1c3d);
@@ -206,6 +206,9 @@
   border-radius: 18px;
   background: linear-gradient(120deg,#2a143cdd,#1a1037ed,#391740dd);
 }
+.gw-art-panel { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; z-index: 0; }
+.gw-tokens > :not(.gw-art-panel) { position: relative; z-index: 1; }
+.gw-tokens:has(.gw-art-panel:not([hidden])) { background: transparent; border-color: transparent; }
 .gw-token {
   position: relative;
   flex: 0 0 9%;
@@ -287,6 +290,7 @@
   font: clamp(9px,2.8cqw,13px)/1.4 Arial,sans-serif;
   color: #fff0cf;
 }
+.gw-sector-sprite { pointer-events: none; }
 .gw-icon-sprite { position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none; }
 .gw-art-icons { width: 512px; height: 384px; }
 .gw-debug { position: absolute; z-index: 6; bottom: 1%; left: 5%; width: 90%; font: 10px/1.2 ui-monospace,monospace; color: #a4efff; overflow-wrap: anywhere; }
