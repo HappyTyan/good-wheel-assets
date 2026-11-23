@@ -1,6 +1,6 @@
 // Single resource revision for CSS and the complete ES module graph.
 const ROOT_ID = "gw-root";
-const VERSION = "3.10.0-approved-layered-layout";
+const VERSION = "3.10.1-rim-caption";;
 const BASE = new URL("./", import.meta.url);
 const resource = path => {
   const url = new URL(path, BASE);

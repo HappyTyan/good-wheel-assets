@@ -602,3 +602,34 @@
   .gw-shell .gw-ribbon { left: 7%; width: 86%; padding: 4px 9px; }
   .gw-shell .gw-subtitle { font-size: clamp(10px, 3.1cqw, 13px); }
 }
+
+/* Visual cleanup: remove square backing from optional rim artwork without
+   changing the live SVG wheel or its animation. */
+.gw-stage .gw-art-rim {
+  -webkit-mask-image: radial-gradient(circle at center,
+    transparent 0%, transparent 38%, #000 42%, #000 49.5%, transparent 50.5%);
+  mask-image: radial-gradient(circle at center,
+    transparent 0%, transparent 38%, #000 42%, #000 49.5%, transparent 50.5%);
+}
+/* A small unobtrusive caption below the cat and crystal ball. */
+.gw-shell .gw-ribbon {
+  top: 83.2%;
+  left: 18%;
+  width: 64%;
+  height: 5.5%;
+  padding: 3px 8px;
+  border: 1px solid #dfb76b88;
+  border-radius: 11px;
+  background: linear-gradient(90deg, #261039d9, #4d2065e8, #261039d9);
+  box-shadow: 0 2px 8px #0c051a55;
+}
+.gw-shell .gw-subtitle {
+  color: #fff0c6;
+  font-size: clamp(10px, 2.9cqw, 14px);
+  line-height: 1.12;
+  text-shadow: 0 1px 3px #13051d;
+}
+@media (max-width: 360px) {
+  .gw-shell .gw-ribbon { left: 14%; width: 72%; padding: 2px 6px; }
+  .gw-shell .gw-subtitle { font-size: clamp(9px, 2.8cqw, 12px); }
+}
