@@ -438,3 +438,45 @@
   .gw-controls .gw-tokens { padding: 10px 6px; }
   .gw-controls .gw-actions { gap: 6px; }
 }
+
+/* RC1: keep every label inside its decorative field at narrow widths. */
+.gw-shell .gw-header,
+.gw-shell .gw-ribbon,
+.gw-topbar button,
+.gw-controls .gw-spin-area,
+.gw-controls .gw-tokens,
+.gw-controls .gw-actions button,
+.gw-controls .gw-banner,
+.gw-controls .gw-rules {
+  min-width: 0;
+  overflow: hidden;
+}
+.gw-shell .gw-header { padding-inline: 6%; }
+.gw-shell .gw-title { max-width: 100%; overflow-wrap: break-word; text-wrap: balance; }
+.gw-shell .gw-ribbon { padding-inline: 7%; }
+.gw-shell .gw-subtitle { max-width: 100%; overflow-wrap: break-word; text-wrap: balance; }
+.gw-controls .gw-spin-area { padding-inline: 7%; }
+.gw-controls .gw-button {
+  display: grid;
+  place-items: center;
+  padding-inline: 8px;
+  font-size: clamp(14px, 4.2cqw, 21px);
+  line-height: 1.12;
+  white-space: normal;
+  text-wrap: balance;
+}
+.gw-controls .gw-tokens { overflow: visible; }
+.gw-controls .gw-unlock { max-width: 100%; overflow-wrap: anywhere; text-wrap: balance; }
+.gw-controls .gw-actions button {
+  padding: 5px 10px;
+  line-height: 1.2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+.gw-controls .gw-banner { padding-right: 5%; line-height: 1.2; text-wrap: balance; }
+.gw-controls .gw-rules { overflow-wrap: anywhere; }
+@media (max-width: 360px) {
+  .gw-controls .gw-spin-area { padding-inline: 4%; }
+  .gw-controls .gw-actions button { padding-inline: 5px; font-size: 11px; }
+}
