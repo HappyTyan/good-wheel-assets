@@ -16,7 +16,6 @@ export async function mount(root,overlayRoot){
     <nav class="gw-topbar" aria-label="Управление"><button class="gw-music" type="button" aria-pressed="false">♫ Музыка: выкл</button><button class="gw-top-history" type="button">☰ История</button></nav>
     <header class="gw-header"><h1 class="gw-title">Колесо добрых предсказаний</h1></header>
     <div class="gw-ribbon"><p class="gw-subtitle">Поверните волшебное колесо и откройте доброе послание!</p></div>
-    <div class="gw-stand" aria-hidden="true"></div>
     <div class="gw-stage"><div class="gw-wheel-rim">${image("wheel-rim","gw-art-rim")}</div><div class="gw-wheel">${renderWheel(debug)}</div><div class="gw-hub">${image("hub","gw-art-hub")}</div><div class="gw-pointer">${image("pointer","gw-art-pointer")}</div></div>
   </section><section class="gw-controls" aria-label="Управление игрой"><div class="gw-play"><div class="gw-spin-area">${image("spin-button","gw-art-spin")}<button class="gw-button" type="button">КРУТИТЬ КОЛЕСО</button></div>
       <div class="gw-tokens" aria-label="Пять вращений в сутки">${image("panel-frame","gw-art-panel")}${Array.from({length:5},()=>'<span class="gw-token" aria-hidden="true">'+starSvg+lockSvg+'</span>').join("")}
