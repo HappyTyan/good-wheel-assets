@@ -14,7 +14,7 @@ export async function mount(root,overlayRoot){
   root.innerHTML = `<section class="gw-shell">
     <div class="gw-scene" aria-hidden="true"><span class="gw-forest"></span>${image("scene","gw-art-scene")}</div>
     <nav class="gw-topbar" aria-label="Управление"><button class="gw-music" type="button" aria-pressed="false">♫ Музыка: выкл</button><button class="gw-top-history" type="button">☰ История</button></nav>
-    <header class="gw-header"><h1 class="gw-title">Колесо добрых предсказаний</h1></header>
+    <header class="gw-header"><h1 class="gw-title"><svg class="gw-title-svg" viewBox="0 0 900 190" role="img" aria-label="Колесо добрых предсказаний" preserveAspectRatio="xMidYMid meet"><defs><path id="gw-title-arc-1" d="M 105 90 Q 450 12 795 90"/><path id="gw-title-arc-2" d="M 90 153 Q 450 75 810 153"/></defs><text class="gw-title-line gw-title-line-one"><textPath href="#gw-title-arc-1" startOffset="50%" text-anchor="middle">Колесо добрых</textPath></text><text class="gw-title-line gw-title-line-two"><textPath href="#gw-title-arc-2" startOffset="50%" text-anchor="middle">предсказаний</textPath></text></svg></h1></header>
     <div class="gw-ribbon"><p class="gw-subtitle">Поверните волшебное колесо и откройте доброе послание!</p></div>
     <div class="gw-stage"><div class="gw-wheel-rim">${image("wheel-rim","gw-art-rim")}</div><div class="gw-wheel">${renderWheel(debug)}</div><div class="gw-hub">${image("hub","gw-art-hub")}</div><div class="gw-pointer">${image("pointer","gw-art-pointer")}</div></div>
   </section><section class="gw-controls" aria-label="Управление игрой"><div class="gw-play"><div class="gw-spin-area">${image("spin-button","gw-art-spin")}<button class="gw-button" type="button">КРУТИТЬ КОЛЕСО</button></div>
