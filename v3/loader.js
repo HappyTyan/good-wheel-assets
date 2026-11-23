@@ -1,6 +1,6 @@
 // Single resource revision for CSS and the complete ES module graph.
 const ROOT_ID = "gw-root";
-const VERSION = "3.9.0-neon-reveal";
+const VERSION = "3.9.1-neon-clip-fix";
 const BASE = new URL("./", import.meta.url);
 const resource = path => {
   const url = new URL(path, BASE);
