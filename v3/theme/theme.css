@@ -542,3 +542,12 @@
   .gw-stage .gw-pointer.gw-pointer-celebrate,
   .gw-wheel-svg .gw-sector-fill.gw-sector-winning { animation: none; }
 }
+
+/* Keep the long cooldown label inside the illustrated spin button on narrow screens. */
+.gw-controls .gw-button:disabled {
+  font-size: clamp(12px, 3.4cqw, 17px);
+  line-height: 1.05;
+  padding-inline: 14px;
+  overflow-wrap: normal;
+  text-wrap: balance;
+}
