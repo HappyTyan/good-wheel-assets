@@ -81,11 +81,20 @@ export async function mount(root,overlayRoot){
       dialog.append(list);const close=document.createElement("button");close.type="button";close.textContent="Закрыть";close.addEventListener("click",()=>panel.remove(),{once:true});dialog.append(close);panel.append(dialog);overlayRoot.append(panel);
     }catch(err){error.textContent=err.message||"Не удалось открыть историю";}
   });
+  const uprightIcons=[...root.querySelectorAll(".gw-sector-sprite, .gw-sector-icon")];
   async function animate(from,to,duration){
     const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
     const ms=reduced?350:duration;
     const motion=wheel.animate([{transform:`rotate(${from}deg)`},{transform:`rotate(${to}deg)`}],{duration:ms,easing:"cubic-bezier(.12,.6,.1,1)",fill:"forwards"});
+    // Counter-rotate each icon with the same timing/easing as the wheel.
+    // Icons stay upright during the spin and after the wheel stops.
+    const iconMotions=uprightIcons.map(icon=>icon.animate(
+      [{transform:`rotate(${-from}deg)`},{transform:`rotate(${-to}deg)`}],
+      {duration:ms,easing:"cubic-bezier(.12,.6,.1,1)",fill:"forwards"}
+    ));
     await motion.finished;
+    uprightIcons.forEach(icon=>{icon.style.transform=`rotate(${-to}deg)`;});
+    iconMotions.forEach(animation=>animation.cancel());
     wheel.style.transform=`rotate(${to}deg)`;motion.cancel();
     if(debug)debugEl.textContent+=`; фактически под указателем: ${sectorAtRotation(to)}; до границы: ${angularDistanceToBoundary(to).toFixed(2)}°`;
   }
