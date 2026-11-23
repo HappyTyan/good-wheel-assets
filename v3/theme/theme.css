@@ -522,11 +522,13 @@
   stroke: #8ffaff;
   stroke-width: 1.3;
   stroke-linejoin: round;
-  filter: brightness(1.5) drop-shadow(0 0 1.4px #74ffff) drop-shadow(0 0 3px #f56aff);
+  /* Avoid SVG filter compositing: nested sprite viewports may leak adjacent atlas cells. */
+  filter: none;
   animation: gw-sector-neon 0.75s ease-in-out 2;
 }
 .gw-wheel-svg .gw-sector-sprite.gw-icon-winning {
-  filter: brightness(1.35) drop-shadow(0 0 2px #fff0a4);
+  /* Keep sprite clipping unchanged: filtering the nested SVG reveals atlas neighbours. */
+  filter: none;
 }
 @keyframes gw-sector-neon {
   0%, 100% { opacity: 1; }
