@@ -142,6 +142,35 @@ async function run(){
   }
   fixture.remove();
   report("Отрисовка SVG: заливки, линии, номера",renderErrors.length===0,renderErrors.length?renderErrors.join("\n"):"12 секторов: все углы совпадают с geometry.js, допуск 0.01°");
+
+  // Stage 3a layout: real CSS in a 360px Shadow DOM fixture, no localStorage writes.
+  try {
+    const holder=document.createElement("div");
+    holder.style.cssText="position:absolute;left:-10000px;top:0;width:360px";
+    document.body.append(holder);
+    const shadow=holder.attachShadow({mode:"open"});
+    const link=document.createElement("link");
+    link.rel="stylesheet";
+    link.href="../theme/theme.css?v=3.1.0-stage3a";
+    const shell=document.createElement("section");
+    shell.className="gw-shell";
+    shell.innerHTML='<div class="gw-stage"><div class="gw-wheel">'+renderWheel(false)+'</div></div><div class="gw-spin-area"><button class="gw-button">КРУТИТЬ КОЛЕСО</button></div>';
+    shadow.append(link,shell);
+    await new Promise((resolve,reject)=>{
+      if(link.sheet){resolve();return;}
+      link.addEventListener("load",resolve,{once:true});
+      link.addEventListener("error",()=>reject(Error("CSS not loaded")),{once:true});
+    });
+    const a=shell.getBoundingClientRect(),w=shell.querySelector(".gw-stage").getBoundingClientRect(),b=shell.querySelector(".gw-button").getBoundingClientRect();
+    const cx=100*((w.left+w.width/2)-a.left)/a.width;
+    const cy=100*((w.top+w.height/2)-a.top)/a.height;
+    const diameter=100*w.width/a.width;
+    const noOverlap=w.bottom<=b.top;
+    const ok=Math.abs(cx-50)<=1&&Math.abs(cy-32)<=1&&Math.abs(diameter-46)<=1&&noOverlap;
+    report("Макет: 360px, центр, диаметр, без пересечения",ok,
+      "центр X="+cx.toFixed(2)+"% (50±1), Y="+cy.toFixed(2)+"% (32±1); диаметр="+diameter.toFixed(2)+"% (46±1); пересечение="+(!noOverlap));
+    holder.remove();
+  }catch(error){report("Макет: 360px, центр, диаметр, без пересечения",false,error.message);}
   summary.className="summary "+(passed===total?"pass":"fail");
   summary.textContent=(passed===total?"PASS ":"FAIL ")+passed+"/"+total+" проверок";
 }

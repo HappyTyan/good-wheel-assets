@@ -1,144 +1,110 @@
 {
-  "version": "3.0.0-stage2b-prep",
+  "version": "3.1.0-stage3a",
   "canvas": {
     "width": 1024,
     "height": 1536,
     "aspectRatio": "2 / 3"
   },
-  "note": "Forest-frame WebP is prepared separately and must be uploaded to v3/img/forest-frame.webp by the owner; all other artwork remains CSS/SVG placeholders. This manifest does not drive runtime positioning yet.",
-  "coordinateSystem": "Percentages relative to 1024x1536 design canvas; wheel geometry stays in engine/geometry.js.",
+  "sourceOfTruth": "v3/theme/theme.css .gw-shell CSS custom properties; regions below are documentation only, not a second runtime positioning engine.",
+  "regions": {
+    "topbar": {
+      "top": 1,
+      "height": 5
+    },
+    "title": {
+      "top": 6,
+      "height": 5
+    },
+    "ribbon": {
+      "top": 12,
+      "height": 8
+    },
+    "wheel": {
+      "centerX": 50,
+      "centerY": 32,
+      "diameterWidth": 46
+    },
+    "stand": {
+      "top": 45,
+      "height": 6
+    },
+    "spin": {
+      "top": 52,
+      "height": 6,
+      "width": 86
+    },
+    "tokens": {
+      "top": 60,
+      "height": 9
+    },
+    "actions": {
+      "top": 71,
+      "height": 4
+    },
+    "banner": {
+      "top": 77,
+      "height": 8
+    },
+    "rules": {
+      "top": 87,
+      "height": 7
+    }
+  },
   "layers": [
     {
-      "file": "forest-frame.webp",
-      "x": 0,
-      "y": 0,
-      "width": 100,
-      "height": 100,
-      "zIndex": 0,
-      "transparent": false,
-      "format": "webp",
-      "maxKB": 160
-    },
-    {
-      "file": "ribbon.webp",
-      "x": 7,
-      "y": 3,
-      "width": 86,
-      "height": 13,
-      "zIndex": 3,
-      "transparent": true,
-      "format": "webp",
-      "maxKB": 35
+      "file": "scene.webp",
+      "optional": true,
+      "order": 0,
+      "format": "webp"
     },
     {
       "file": "wheel-rim.webp",
-      "x": 11,
-      "y": 28,
-      "width": 78,
-      "height": 52,
-      "zIndex": 7,
-      "transparent": true,
-      "format": "webp",
-      "maxKB": 55
+      "optional": true,
+      "order": 1,
+      "format": "webp"
     },
     {
-      "file": "wheel-hub.webp",
-      "x": 43,
-      "y": 49,
-      "width": 14,
-      "height": 9,
-      "zIndex": 10,
-      "transparent": true,
-      "format": "webp",
-      "maxKB": 15
+      "file": "hub.webp",
+      "optional": true,
+      "order": 2,
+      "format": "webp"
     },
     {
-      "file": "crystal-pointer.webp",
-      "x": 46,
-      "y": 26,
-      "width": 8,
-      "height": 6,
-      "zIndex": 11,
-      "transparent": true,
-      "format": "webp",
-      "maxKB": 10
+      "file": "pointer.webp",
+      "optional": true,
+      "order": 3,
+      "format": "webp"
     },
     {
-      "file": "wheel-stand.webp",
-      "x": 36,
-      "y": 70,
-      "width": 28,
-      "height": 12,
-      "zIndex": 4,
-      "transparent": true,
-      "format": "webp",
-      "maxKB": 25
+      "file": "spin-button.webp",
+      "optional": true,
+      "order": 4,
+      "format": "webp"
     },
     {
-      "file": "cat-pillow.webp",
-      "x": 71,
-      "y": 68,
-      "width": 24,
-      "height": 12,
-      "zIndex": 5,
-      "transparent": true,
-      "format": "webp",
-      "maxKB": 40
+      "file": "panel-frame.webp",
+      "optional": true,
+      "order": 5,
+      "format": "webp"
     },
     {
-      "file": "orb-books.webp",
-      "x": 5,
-      "y": 66,
-      "width": 24,
-      "height": 14,
-      "zIndex": 5,
-      "transparent": true,
+      "file": "icons.webp",
+      "optional": true,
+      "order": 6,
       "format": "webp",
-      "maxKB": 40
+      "sprite": {
+        "columns": 4,
+        "rows": 3,
+        "cellPx": 128
+      }
     },
     {
-      "file": "lantern-left.webp",
-      "x": 4,
-      "y": 35,
-      "width": 10,
-      "height": 16,
-      "zIndex": 4,
-      "transparent": true,
-      "format": "webp",
-      "maxKB": 20
-    },
-    {
-      "file": "lantern-right.webp",
-      "x": 86,
-      "y": 35,
-      "width": 10,
-      "height": 16,
-      "zIndex": 4,
-      "transparent": true,
-      "format": "webp",
-      "maxKB": 20
-    },
-    {
-      "file": "button.webp",
-      "x": 6,
-      "y": 81,
-      "width": 88,
-      "height": 8,
-      "zIndex": 5,
-      "transparent": true,
-      "format": "webp",
-      "maxKB": 25
-    },
-    {
-      "file": "sector-icons.webp",
-      "x": 0,
-      "y": 0,
-      "width": 0,
-      "height": 0,
-      "zIndex": 8,
-      "transparent": true,
-      "format": "webp",
-      "maxKB": 45
+      "file": "gift.webp",
+      "optional": true,
+      "order": 7,
+      "format": "webp"
     }
-  ]
+  ],
+  "existingFallback": "v3/img/forest-frame.webp remains the CSS fallback for missing scene.webp",
+  "note": "No new binary artwork included. Missing optional images hide on error; existing CSS/SVG remains. Audio toggle is a placeholder."
 }

@@ -8,7 +8,40 @@ export async function mount(root,overlayRoot){
   const params=new URLSearchParams(location.search);
   const demo=params.get("demo")==="1"||location.pathname.endsWith("/v3/demo.html");
   const debug=demo?params.get("symbols")!=="1":params.get("debug")==="1";
-  root.innerHTML=`<section class="gw-shell"><div class="gw-scene" aria-hidden="true"><span class="gw-forest"></span><span class="gw-lantern gw-lantern-left"></span><span class="gw-lantern gw-lantern-right"></span><span class="gw-orb"></span><span class="gw-cat"></span></div><header class="gw-header"><div class="gw-ribbon"><h1 class="gw-title">Колесо добрых предсказаний</h1></div><p class="gw-subtitle">Поверните волшебное колесо и откройте доброе послание!</p></header><div class="gw-stage"><div class="gw-pointer"></div><div class="gw-wheel">${renderWheel(debug)}</div><div class="gw-stand" aria-hidden="true"></div></div><div class="gw-play"><button class="gw-button" type="button">КРУТИТЬ КОЛЕСО</button><div class="gw-tokens" aria-label="Пять вращений в сутки"><span class="gw-token" aria-hidden="true"></span><span class="gw-token" aria-hidden="true"></span><span class="gw-token" aria-hidden="true"></span><span class="gw-token" aria-hidden="true"></span><span class="gw-token" aria-hidden="true"></span><span class="gw-unlock" aria-hidden="true"></span></div><div class="gw-status" aria-live="polite">Загрузка...</div><div class="gw-error" role="alert"></div></div><nav class="gw-actions" aria-label="Разделы игры"><button class="gw-prizes" type="button" disabled title="Будущий модуль">Призы от партнёров <span class="gw-badge">скоро</span></button><button class="gw-history" type="button">Мои предсказания</button></nav><div class="gw-banner" aria-label="Место для баннера партнёра"><span>Место для партнёрского баннера</span></div><div class="gw-debug"></div></section>`;
+  const starSvg = '<svg class="gw-token-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 14.9 8.5 21.5 9.4 16.7 14.1 17.8 20.8 12 17.7 6.2 20.8 7.3 14.1 2.5 9.4 9.1 8.5Z" fill="currentColor"/></svg>';
+  const lockSvg = '<svg class="gw-token-lock" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><rect x="5" y="10" width="14" height="11" rx="2.5" fill="currentColor"/></svg>';
+  const image = (name, className, extra="") => '<img class="gw-art '+className+'" src="'+new URL("./img/"+name+".webp",import.meta.url).href+'" alt="" decoding="async" loading="eager" '+extra+'>';
+  root.innerHTML = `<section class="gw-shell">
+    <div class="gw-scene" aria-hidden="true"><span class="gw-forest"></span>${image("scene","gw-art-scene")}</div>
+    <nav class="gw-topbar" aria-label="Управление"><button class="gw-music" type="button" aria-pressed="false">♫ Музыка: выкл</button><button class="gw-top-history" type="button">☰ История</button></nav>
+    <header class="gw-header"><h1 class="gw-title">Колесо добрых предсказаний</h1></header>
+    <div class="gw-ribbon"><p class="gw-subtitle">Поверните волшебное колесо и откройте доброе послание!</p></div>
+    <div class="gw-stand" aria-hidden="true"></div>
+    <div class="gw-stage"><div class="gw-wheel-rim">${image("wheel-rim","gw-art-rim")}</div><div class="gw-wheel">${renderWheel(debug)}</div><div class="gw-hub">${image("hub","gw-art-hub")}</div><div class="gw-pointer">${image("pointer","gw-art-pointer")}</div></div>
+    <div class="gw-play"><div class="gw-spin-area">${image("spin-button","gw-art-spin")}<button class="gw-button" type="button">КРУТИТЬ КОЛЕСО</button></div>
+      <div class="gw-tokens" aria-label="Пять вращений в сутки">${image("panel-frame","gw-art-panel")}${Array.from({length:5},()=>'<span class="gw-token" aria-hidden="true">'+starSvg+lockSvg+'</span>').join("")}
+        <span class="gw-token-divider" aria-hidden="true"></span><span class="gw-clock" aria-hidden="true">◷</span><span class="gw-unlock" aria-live="polite"></span></div>
+      <div class="gw-status" aria-live="polite">Загрузка...</div><div class="gw-error" role="alert"></div>
+    </div>
+    <nav class="gw-actions" aria-label="Разделы игры"><button class="gw-prizes" type="button" disabled title="Будущий модуль">Призы от партнёров <span class="gw-badge">0</span></button><button class="gw-history" type="button">Мои предсказания</button></nav>
+    <div class="gw-banner" aria-label="Место для баннера партнёра">${image("gift","gw-art-gift")}<span>Место для партнёрского баннера</span></div>
+    <div class="gw-rules">5 бесплатных предсказаний каждый день.<br>Первые 3 доступны сразу, ещё 2 через 60 минут после первого вращения.<br>Обновление в 00:00 по времени Южной Кореи.<br>Развлекательная игра с добрыми пожеланиями.</div>
+    <div class="gw-icon-sprite" aria-hidden="true">${image("icons","gw-art-icons")}</div>
+    <div class="gw-debug"></div>
+  </section>`;
+  // Missing optional artwork must not replace the existing CSS/SVG fallbacks.
+  root.querySelectorAll(".gw-art").forEach(img => {
+    img.addEventListener("error", () => { img.hidden = true; }, {once:true});
+    if (img.complete && img.naturalWidth === 0) img.hidden = true;
+  });
+  const musicButton = root.querySelector(".gw-music");
+  musicButton.addEventListener("click", () => {
+    const enabled = musicButton.getAttribute("aria-pressed") !== "true";
+    musicButton.setAttribute("aria-pressed", String(enabled));
+    musicButton.textContent = enabled ? "♫ Музыка: вкл" : "♫ Музыка: выкл";
+    // Stage 3a placeholder only: no audio module or sound playback.
+  });
+  root.querySelector(".gw-top-history").addEventListener("click", () => root.querySelector(".gw-history").click());
   const wheel=root.querySelector(".gw-wheel"),button=root.querySelector(".gw-button"),status=root.querySelector(".gw-status"),error=root.querySelector(".gw-error"),debugEl=root.querySelector(".gw-debug"),tokens=[...root.querySelectorAll(".gw-token")],unlock=root.querySelector(".gw-unlock"),historyButton=root.querySelector(".gw-history");
   const clock=()=>Date.now()+(demo?Number(sessionStorage.getItem("gw-v3-demo-clock-offset")||0):0);
   const api=demo?createApi({now:clock}):createApi();
