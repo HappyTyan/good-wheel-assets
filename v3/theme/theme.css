@@ -10,26 +10,26 @@
 .gw-shell {
   --topbar-top: 1%;
   --topbar-height: 5%;
-  --title-top: 6%;
-  --title-height: 5%;
-  --ribbon-top: 12%;
-  --ribbon-height: 8%;
+  --title-top: 7%;
+  --title-height: 6%;
+  --ribbon-top: 14%;
+  --ribbon-height: 5%;
   --wheel-x: 50%;
-  --wheel-y: 32%;
-  --wheel-size: 46%;
-  --stand-top: 45%;
-  --stand-height: 6%;
-  --spin-top: 52%;
+  --wheel-y: 38%;
+  --wheel-size: 56%;
+  --stand-top: 54%;
+  --stand-height: 5%;
+  --spin-top: 58%;
   --spin-height: 6%;
   --spin-width: 86%;
-  --tokens-top: 60%;
-  --tokens-height: 9%;
-  --actions-top: 71%;
-  --actions-height: 4%;
-  --banner-top: 77%;
-  --banner-height: 8%;
-  --rules-top: 87%;
-  --rules-height: 7%;
+  --tokens-top: 66%;
+  --tokens-height: 8%;
+  --actions-top: 77%;
+  --actions-height: 6%;
+  --banner-top: 84%;
+  --banner-height: 6%;
+  --rules-top: 91%;
+  --rules-height: 8%;
   position: relative;
   isolation: isolate;
   container-type: inline-size;
@@ -86,7 +86,7 @@
 }
 .gw-header {
   position: absolute;
-  z-index: 2;
+  z-index: 16;
   top: var(--title-top);
   left: 5%;
   width: 90%;
@@ -97,13 +97,13 @@
 .gw-title {
   margin: 0;
   color: #ffdf8b;
-  font-size: clamp(18px,6cqw,30px);
+  font-size: clamp(18px,5.1cqw,27px);
   line-height: 1.04;
   text-shadow: 0 2px 5px #210b31, 0 0 8px #c87b3b;
 }
 .gw-ribbon {
   position: absolute;
-  z-index: 2;
+  z-index: 16;
   top: var(--ribbon-top);
   left: 7%;
   width: 86%;
@@ -116,7 +116,7 @@
   border-radius: 12px;
   box-shadow: inset 0 2px 5px #fff7d388,0 4px 12px #09041599;
 }
-.gw-subtitle { margin: 0; color: #45264e; font: 700 clamp(11px,3.7cqw,19px)/1.2 Georgia,serif; }
+.gw-subtitle { margin: 0; color: #45264e; font: 700 clamp(11px,3.1cqw,16px)/1.15 Georgia,serif; }
 .gw-stage {
   position: absolute;
   z-index: 5;
@@ -150,7 +150,7 @@
 .gw-art-pointer { width: 100%; height: 100%; object-fit: contain; }
 .gw-stand {
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   left: 36%;
   width: 28%;
   top: var(--stand-top);
@@ -181,9 +181,10 @@
   box-shadow: inset 0 2px 2px #ffe3fa99,0 4px 15px #d84cf355;
   color: #fff0c1;
   font: 700 clamp(12px,4.1cqw,21px) Georgia,serif;
-  text-shadow: 0 1px 2px #2b003b;
+  text-shadow: 0 2px 3px #1a032b, 0 0 8px #180425;
+  letter-spacing: .015em;
 }
-.gw-spin-area:has(.gw-art-spin:not([hidden])) .gw-button { background: transparent; border-color: transparent; box-shadow: none; }
+.gw-spin-area:has(.gw-art-spin:not([hidden])) .gw-button { background: #32044755; border-color: transparent; box-shadow: none; }
 .gw-button:disabled {
   cursor: not-allowed;
   background: linear-gradient(#5e4371,#49315c 55%,#2a1c3d);
@@ -233,13 +234,13 @@
 .gw-status {
   position: absolute;
   z-index: 3;
-  top: 69%;
+  top: 74%;
   left: 5%;
   width: 90%;
   color: #fff0c8;
   font: clamp(9px,2.7cqw,13px)/1.25 Arial,sans-serif;
 }
-.gw-error { position: absolute; z-index: 9; top: 69%; left: 5%; width: 90%; color: #ffd3d3; font: 12px/1.3 Arial,sans-serif; }
+.gw-error { position: absolute; z-index: 9; top: 74%; left: 5%; width: 90%; color: #ffd3d3; font: 12px/1.3 Arial,sans-serif; }
 .gw-actions {
   position: absolute;
   z-index: 5;
@@ -259,7 +260,8 @@
   border-radius: 999px;
   background: linear-gradient(#7d378f,#54206d 52%,#28113f);
   color: #fff2c6;
-  font: 700 clamp(10px,3.2cqw,15px) Georgia,serif;
+  font: 700 clamp(10px,3cqw,15px) Georgia,serif;
+  text-shadow: 0 1px 2px #12031d;
 }
 .gw-actions button:disabled { opacity: .8; cursor: not-allowed; }
 .gw-badge { display: inline-block; padding: 2px 5px; border-radius: 999px; background: #a92755; color: white; font: 700 10px Arial,sans-serif; }
@@ -278,6 +280,7 @@
   background: linear-gradient(105deg,#4a175cdd,#73226bce,#3a164cdd);
   color: #ffe6b2;
   font: 600 clamp(11px,3.2cqw,15px) Georgia,serif;
+  text-shadow: 0 1px 3px #1b062c;
 }
 .gw-art-gift { position: absolute; left: 0; top: 0; width: 23%; height: 100%; object-fit: contain; }
 .gw-rules {
@@ -287,8 +290,12 @@
   left: 6%;
   width: 88%;
   height: var(--rules-height);
-  font: clamp(9px,2.8cqw,13px)/1.4 Arial,sans-serif;
+  font: clamp(9px,2.5cqw,12px)/1.25 Arial,sans-serif;
   color: #fff0cf;
+  padding: 1.2% 2%;
+  border-radius: 10px;
+  background: #130c2dd9;
+  text-shadow: 0 1px 2px #000;
 }
 .gw-sector-sprite { pointer-events: none; }
 .gw-icon-sprite { position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none; }
