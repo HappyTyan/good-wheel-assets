@@ -7,7 +7,7 @@ import { sectorAtRotation,angularDistanceToBoundary } from "./engine/geometry.js
 export async function mount(root,overlayRoot){
   const params=new URLSearchParams(location.search);
   const demo=params.get("demo")==="1"||location.pathname.endsWith("/v3/demo.html");
-  const debug=demo?params.get("symbols")!=="1":params.get("debug")==="1";
+  const debug=params.get("debug")==="1";
   const starSvg = '<svg class="gw-token-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 14.9 8.5 21.5 9.4 16.7 14.1 17.8 20.8 12 17.7 6.2 20.8 7.3 14.1 2.5 9.4 9.1 8.5Z" fill="currentColor"/></svg>';
   const lockSvg = '<svg class="gw-token-lock" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><rect x="5" y="10" width="14" height="11" rx="2.5" fill="currentColor"/></svg>';
   const image = (name, className, extra="") => '<img class="gw-art '+className+'" src="'+new URL("./img/"+name+".webp",import.meta.url).href+'" alt="" decoding="async" loading="eager" '+extra+'>';
