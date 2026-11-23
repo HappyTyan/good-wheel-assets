@@ -19,7 +19,7 @@ export async function mount(root,overlayRoot){
     <div class="gw-stand" aria-hidden="true"></div>
     <div class="gw-stage"><div class="gw-wheel-rim">${image("wheel-rim","gw-art-rim")}</div><div class="gw-wheel">${renderWheel(debug)}</div><div class="gw-hub">${image("hub","gw-art-hub")}</div><div class="gw-pointer">${image("pointer","gw-art-pointer")}</div></div>
     <div class="gw-play"><div class="gw-spin-area">${image("spin-button","gw-art-spin")}<button class="gw-button" type="button">КРУТИТЬ КОЛЕСО</button></div>
-      <div class="gw-tokens" aria-label="Пять вращений в сутки">${Array.from({length:5},()=>'<span class="gw-token" aria-hidden="true">'+starSvg+lockSvg+'</span>').join("")}
+      <div class="gw-tokens" aria-label="Пять вращений в сутки">${image("panel-frame","gw-art-panel")}${Array.from({length:5},()=>'<span class="gw-token" aria-hidden="true">'+starSvg+lockSvg+'</span>').join("")}
         <span class="gw-token-divider" aria-hidden="true"></span><span class="gw-clock" aria-hidden="true">◷</span><span class="gw-unlock" aria-live="polite"></span></div>
       <div class="gw-status" aria-live="polite">Загрузка...</div><div class="gw-error" role="alert"></div>
     </div>
