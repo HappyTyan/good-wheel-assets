@@ -27,8 +27,7 @@ export async function mount(root,overlayRoot){
     <div class="gw-banner" aria-label="Место для баннера партнёра">${image("gift","gw-art-gift")}<span>Место для партнёрского баннера</span></div>
     <div class="gw-rules">5 бесплатных предсказаний каждый день.<br>Первые 3 доступны сразу, ещё 2 через 60 минут после первого вращения.<br>Обновление в 00:00 по времени Южной Кореи.<br>Развлекательная игра с добрыми пожеланиями.</div>
     <div class="gw-icon-sprite" aria-hidden="true">${image("icons","gw-art-icons")}</div>
-    <div class="gw-debug"></div>
-  </section>`;
+  </section><div class="gw-debug" aria-live="off"></div>`;
   // Missing optional artwork must not replace the existing CSS/SVG fallbacks.
   root.querySelectorAll(".gw-art").forEach(img => {
     img.addEventListener("error", () => { img.hidden = true; }, {once:true});
