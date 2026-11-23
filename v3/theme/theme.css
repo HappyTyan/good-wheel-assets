@@ -510,3 +510,33 @@
 .gw-stage .gw-pointer:has(.gw-art-pointer:not([hidden])) {
   filter: drop-shadow(0 2px 3px #180a27) drop-shadow(0 0 6px #ffdd83);
 }
+
+/* Winner reveal: highlight only the API-selected sector after rotation stops. */
+.gw-stage .gw-pointer {
+  filter: drop-shadow(0 0 7px #ff7dfb) drop-shadow(0 0 12px #ac39ff);
+}
+.gw-stage .gw-pointer.gw-pointer-celebrate {
+  animation: gw-pointer-flash 0.5s ease-in-out 3;
+}
+.gw-wheel-svg .gw-sector-fill.gw-sector-winning {
+  stroke: #8ffaff;
+  stroke-width: 1.3;
+  stroke-linejoin: round;
+  filter: brightness(1.5) drop-shadow(0 0 1.4px #74ffff) drop-shadow(0 0 3px #f56aff);
+  animation: gw-sector-neon 0.75s ease-in-out 2;
+}
+.gw-wheel-svg .gw-sector-sprite.gw-icon-winning {
+  filter: brightness(1.35) drop-shadow(0 0 2px #fff0a4);
+}
+@keyframes gw-sector-neon {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.72; }
+}
+@keyframes gw-pointer-flash {
+  0%, 100% { filter: drop-shadow(0 0 7px #ff7dfb) drop-shadow(0 0 12px #ac39ff); }
+  50% { filter: drop-shadow(0 0 13px #ffffff) drop-shadow(0 0 22px #ff57f5); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gw-stage .gw-pointer.gw-pointer-celebrate,
+  .gw-wheel-svg .gw-sector-fill.gw-sector-winning { animation: none; }
+}
