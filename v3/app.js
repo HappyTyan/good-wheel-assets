@@ -13,17 +13,17 @@ export async function mount(root,overlayRoot){
   const image = (name, className, extra="") => '<img class="gw-art '+className+'" src="'+new URL("./img/"+name+".webp",import.meta.url).href+'" alt="" decoding="async" loading="eager" '+extra+'>';
   root.innerHTML = `<section class="gw-shell">
     <div class="gw-scene" aria-hidden="true"><span class="gw-forest"></span>${image("scene","gw-art-scene")}</div>
-    <nav class="gw-topbar" aria-label="Управление"><button class="gw-music" type="button" aria-pressed="false">♫ Музыка: выкл</button><button class="gw-top-history" type="button">☰ История</button></nav>
+    <nav class="gw-topbar" aria-label="Управление"><button class="gw-music" type="button" aria-pressed="false">♫ Музыка: выкл</button></nav>
     <header class="gw-header"><h1 class="gw-title"><svg class="gw-title-svg" viewBox="0 0 900 190" role="img" aria-label="Колесо добрых предсказаний" preserveAspectRatio="xMidYMid meet"><defs><path id="gw-title-arc-1" d="M 105 90 Q 450 12 795 90"/><path id="gw-title-arc-2" d="M 90 153 Q 450 75 810 153"/></defs><text class="gw-title-line gw-title-line-one"><textPath href="#gw-title-arc-1" startOffset="50%" text-anchor="middle">Колесо добрых</textPath></text><text class="gw-title-line gw-title-line-two"><textPath href="#gw-title-arc-2" startOffset="50%" text-anchor="middle">предсказаний</textPath></text></svg></h1></header>
     <div class="gw-ribbon"><p class="gw-subtitle">Поверните волшебное колесо и откройте доброе послание!</p></div>
     <div class="gw-stage"><div class="gw-wheel-rim">${image("wheel-rim","gw-art-rim")}</div><div class="gw-wheel">${renderWheel(debug)}</div><div class="gw-hub">${image("hub","gw-art-hub")}</div><div class="gw-pointer">${image("pointer","gw-art-pointer")}</div></div>
   </section><section class="gw-controls" aria-label="Управление игрой"><div class="gw-play"><div class="gw-spin-area">${image("spin-button","gw-art-spin")}<button class="gw-button" type="button">КРУТИТЬ КОЛЕСО</button></div>
-      <div class="gw-tokens" aria-label="Пять вращений в сутки">${image("panel-frame","gw-art-panel")}${Array.from({length:5},()=>'<span class="gw-token" aria-hidden="true">'+starSvg+lockSvg+'</span>').join("")}
+      <div class="gw-tokens" aria-label="Пять вращений в сутки"><span class="gw-tokens-heading">Ваши вращения сегодня</span>${image("panel-frame","gw-art-panel")}${Array.from({length:5},()=>'<span class="gw-token" aria-hidden="true">'+starSvg+lockSvg+'</span>').join("")}
         <span class="gw-token-divider" aria-hidden="true"></span><span class="gw-clock" aria-hidden="true">◷</span><span class="gw-unlock" aria-live="polite"></span></div>
       <div class="gw-status" aria-live="polite">Загрузка...</div><div class="gw-error" role="alert"></div>
     </div>
-    <nav class="gw-actions" aria-label="Разделы игры"><button class="gw-prizes" type="button" disabled title="Будущий модуль">Призы от партнёров <span class="gw-badge">0</span></button><button class="gw-history" type="button">Мои предсказания</button></nav>
-    <div class="gw-banner" aria-label="Место для баннера партнёра">${image("gift","gw-art-gift")}<span>Место для партнёрского баннера</span></div>
+    <nav class="gw-actions" aria-label="Разделы игры"><button class="gw-prizes" type="button" disabled title="Будущий модуль"><span class="gw-action-icon" aria-hidden="true">🎁</span> Призы от партнёров <span class="gw-badge">0</span></button><button class="gw-history" type="button"><span class="gw-action-icon" aria-hidden="true">▤</span> Мои предсказания</button></nav>
+    <div class="gw-banner" aria-label="Место для баннера партнёра">${image("gift","gw-art-gift")}<span><strong>Выигрывайте реальные подарки</strong><small>в призовых акциях наших партнёров!</small></span><span class="gw-banner-chevron" aria-hidden="true">›</span></div>
     <div class="gw-rules">5 бесплатных предсказаний каждый день.<br>Первые 3 доступны сразу, ещё 2 через 60 минут после первого вращения.<br>Обновление в 00:00 по времени Южной Кореи.<br>Развлекательная игра с добрыми пожеланиями.</div>
   </section><div class="gw-icon-sprite" aria-hidden="true">${image("icons","gw-art-icons")}</div><div class="gw-debug" aria-live="off"></div>`;
   // Missing optional artwork must not replace the existing CSS/SVG fallbacks.
@@ -38,7 +38,7 @@ export async function mount(root,overlayRoot){
     musicButton.textContent = enabled ? "♫ Музыка: вкл" : "♫ Музыка: выкл";
     // Stage 3a placeholder only: no audio module or sound playback.
   });
-  root.querySelector(".gw-top-history").addEventListener("click", () => root.querySelector(".gw-history").click());
+
   const wheel=root.querySelector(".gw-wheel"),button=root.querySelector(".gw-button"),status=root.querySelector(".gw-status"),error=root.querySelector(".gw-error"),debugEl=root.querySelector(".gw-debug"),tokens=[...root.querySelectorAll(".gw-token")],unlock=root.querySelector(".gw-unlock"),historyButton=root.querySelector(".gw-history");
   const clock=()=>Date.now()+(demo?Number(sessionStorage.getItem("gw-v3-demo-clock-offset")||0):0);
   const api=demo?createApi({now:clock}):createApi();
