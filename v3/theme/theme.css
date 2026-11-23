@@ -662,3 +662,16 @@
  .gw-title-line{font-size:50px;}
  .gw-title-line-two{font-size:47px;}
 }
+
+/* v3.16: final title containment and slight upward instruction adjustment. */
+.gw-shell .gw-header{top:7.65%;left:12%;width:76%;height:10.2%;}
+.gw-title-svg{overflow:hidden;}
+.gw-title-line{font-size:43px;letter-spacing:-1px;stroke-width:1.6px;}
+.gw-title-line-two{font-size:41px;}
+.gw-shell .gw-ribbon{top:81.8%;left:22%;width:56%;}
+@media(max-width:370px){
+ .gw-shell .gw-header{left:12%;width:76%;}
+ .gw-title-line{font-size:42px;}
+ .gw-title-line-two{font-size:40px;}
+ .gw-shell .gw-ribbon{top:81.5%;left:19%;width:62%;}
+}
