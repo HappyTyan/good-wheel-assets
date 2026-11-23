@@ -15,19 +15,19 @@
   --ribbon-top: 14%;
   --ribbon-height: 5%;
   --wheel-x: 50%;
-  --wheel-y: 38%;
+  --wheel-y: 39%;
   --wheel-size: 56%;
-  --stand-top: 54%;
+  --stand-top: 55%;
   --stand-height: 5%;
-  --spin-top: 58%;
+  --spin-top: 59%;
   --spin-height: 6%;
   --spin-width: 86%;
-  --tokens-top: 66%;
-  --tokens-height: 8%;
-  --actions-top: 77%;
-  --actions-height: 6%;
-  --banner-top: 84%;
-  --banner-height: 6%;
+  --tokens-top: 67%;
+  --tokens-height: 11%;
+  --actions-top: 79%;
+  --actions-height: 5%;
+  --banner-top: 85%;
+  --banner-height: 5%;
   --rules-top: 91%;
   --rules-height: 8%;
   position: relative;
@@ -93,6 +93,8 @@
   height: var(--title-height);
   display: grid;
   place-items: center;
+  background: linear-gradient(90deg,#160b30ef,#240d3df2 18%,#240d3df2 82%,#160b30ef);
+  border-radius: 12px;
 }
 .gw-title {
   margin: 0;
@@ -110,7 +112,7 @@
   height: var(--ribbon-height);
   display: grid;
   place-items: center;
-  padding: 2% 4%;
+  padding: 1% 4%;
   background: linear-gradient(115deg,#74431d,#f0c77b 12%,#ffeab3 38%,#e5b267 72%,#78451f);
   border: 2px solid #ffe5a5;
   border-radius: 12px;
@@ -199,10 +201,10 @@
   width: 90%;
   height: var(--tokens-height);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-around;
   gap: 1%;
-  padding: 1.5% 2%;
+  padding: 2% 2% 4%;
   border: 2px solid #d6a35f;
   border-radius: 18px;
   background: linear-gradient(120deg,#2a143cdd,#1a1037ed,#391740dd);
@@ -228,19 +230,19 @@
 .gw-token-locked { background: linear-gradient(140deg,#b0a2ce,#665179); color: #f6e6cd; }
 .gw-token-locked .gw-token-star { display: none; }
 .gw-token-locked .gw-token-lock { display: block; }
-.gw-token-divider { flex: 0 0 1px; height: 65%; background: #f6d38a; }
-.gw-clock { flex: 0 0 auto; font: 700 clamp(14px,5cqw,24px) Arial,sans-serif; color: #ffce75; }
-.gw-unlock { flex: 0 1 31%; min-width: 0; color: #ffe3a1; font: 600 clamp(9px,2.8cqw,13px)/1.25 Arial,sans-serif; overflow-wrap: anywhere; }
+.gw-token-divider { flex: 0 0 1px; height: 44%; background: #f6d38a; }
+.gw-clock { flex: 0 0 auto; font: 700 clamp(12px,4cqw,20px) Arial,sans-serif; color: #ffce75; }
+.gw-unlock { flex: 0 1 31%; min-width: 0; color: #ffe3a1; font: 600 clamp(9px,2.5cqw,12px)/1.25 Arial,sans-serif; overflow-wrap: anywhere; }
 .gw-status {
   position: absolute;
   z-index: 3;
-  top: 74%;
-  left: 5%;
-  width: 90%;
+  top: 74.2%;
+  left: 9%;
+  width: 82%;
   color: #fff0c8;
   font: clamp(9px,2.7cqw,13px)/1.25 Arial,sans-serif;
 }
-.gw-error { position: absolute; z-index: 9; top: 74%; left: 5%; width: 90%; color: #ffd3d3; font: 12px/1.3 Arial,sans-serif; }
+.gw-error { position: absolute; z-index: 9; top: 77%; left: 5%; width: 90%; color: #ffd3d3; font: 12px/1.3 Arial,sans-serif; }
 .gw-actions {
   position: absolute;
   z-index: 5;
@@ -281,6 +283,7 @@
   color: #ffe6b2;
   font: 600 clamp(11px,3.2cqw,15px) Georgia,serif;
   text-shadow: 0 1px 3px #1b062c;
+  padding-left: 16%;
 }
 .gw-art-gift { position: absolute; left: 0; top: 0; width: 23%; height: 100%; object-fit: contain; }
 .gw-rules {
@@ -290,17 +293,17 @@
   left: 6%;
   width: 88%;
   height: var(--rules-height);
-  font: clamp(9px,2.5cqw,12px)/1.25 Arial,sans-serif;
+  font: clamp(9px,2.4cqw,11px)/1.2 Arial,sans-serif;
   color: #fff0cf;
   padding: 1.2% 2%;
   border-radius: 10px;
-  background: #130c2dd9;
+  background: #130c2df0;
   text-shadow: 0 1px 2px #000;
 }
 .gw-sector-sprite { pointer-events: none; }
 .gw-icon-sprite { position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none; }
 .gw-art-icons { width: 512px; height: 384px; }
-.gw-debug { position: absolute; z-index: 6; bottom: 1%; left: 5%; width: 90%; font: 10px/1.2 ui-monospace,monospace; color: #a4efff; overflow-wrap: anywhere; }
+.gw-debug { position: relative; margin: 10px auto; max-width: 480px; padding: 10px; border: 1px solid #3a6675; border-radius: 8px; background: #10132a; font: 11px/1.4 ui-monospace,monospace; color: #a4efff; overflow-wrap: anywhere; }
 .gw-result {
   width: min(100%,420px);
   max-height: min(90dvh,740px);
