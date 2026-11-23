@@ -1,11 +1,11 @@
 {
-  "version": "3.0.0-stage2a",
+  "version": "3.0.0-stage2b-prep",
   "canvas": {
     "width": 1024,
     "height": 1536,
     "aspectRatio": "2 / 3"
   },
-  "note": "Future optional artwork. Stage 2a renders CSS/SVG placeholders; no files are loaded from this manifest yet.",
+  "note": "Forest-frame WebP is prepared separately and must be uploaded to v3/img/forest-frame.webp by the owner; all other artwork remains CSS/SVG placeholders. This manifest does not drive runtime positioning yet.",
   "coordinateSystem": "Percentages relative to 1024x1536 design canvas; wheel geometry stays in engine/geometry.js.",
   "layers": [
     {
