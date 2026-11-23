@@ -18,7 +18,7 @@ export async function mount(root,overlayRoot){
     <div class="gw-ribbon"><p class="gw-subtitle">Поверните волшебное колесо и откройте доброе послание!</p></div>
     <div class="gw-stand" aria-hidden="true"></div>
     <div class="gw-stage"><div class="gw-wheel-rim">${image("wheel-rim","gw-art-rim")}</div><div class="gw-wheel">${renderWheel(debug)}</div><div class="gw-hub">${image("hub","gw-art-hub")}</div><div class="gw-pointer">${image("pointer","gw-art-pointer")}</div></div>
-    <div class="gw-play"><div class="gw-spin-area">${image("spin-button","gw-art-spin")}<button class="gw-button" type="button">КРУТИТЬ КОЛЕСО</button></div>
+  </section><section class="gw-controls" aria-label="Управление игрой"><div class="gw-play"><div class="gw-spin-area">${image("spin-button","gw-art-spin")}<button class="gw-button" type="button">КРУТИТЬ КОЛЕСО</button></div>
       <div class="gw-tokens" aria-label="Пять вращений в сутки">${image("panel-frame","gw-art-panel")}${Array.from({length:5},()=>'<span class="gw-token" aria-hidden="true">'+starSvg+lockSvg+'</span>').join("")}
         <span class="gw-token-divider" aria-hidden="true"></span><span class="gw-clock" aria-hidden="true">◷</span><span class="gw-unlock" aria-live="polite"></span></div>
       <div class="gw-status" aria-live="polite">Загрузка...</div><div class="gw-error" role="alert"></div>
@@ -26,8 +26,7 @@ export async function mount(root,overlayRoot){
     <nav class="gw-actions" aria-label="Разделы игры"><button class="gw-prizes" type="button" disabled title="Будущий модуль">Призы от партнёров <span class="gw-badge">0</span></button><button class="gw-history" type="button">Мои предсказания</button></nav>
     <div class="gw-banner" aria-label="Место для баннера партнёра">${image("gift","gw-art-gift")}<span>Место для партнёрского баннера</span></div>
     <div class="gw-rules">5 бесплатных предсказаний каждый день.<br>Первые 3 доступны сразу, ещё 2 через 60 минут после первого вращения.<br>Обновление в 00:00 по времени Южной Кореи.<br>Развлекательная игра с добрыми пожеланиями.</div>
-    <div class="gw-icon-sprite" aria-hidden="true">${image("icons","gw-art-icons")}</div>
-  </section><div class="gw-debug" aria-live="off"></div>`;
+  </section><div class="gw-icon-sprite" aria-hidden="true">${image("icons","gw-art-icons")}</div><div class="gw-debug" aria-live="off"></div>`;
   // Missing optional artwork must not replace the existing CSS/SVG fallbacks.
   root.querySelectorAll(".gw-art").forEach(img => {
     img.addEventListener("error", () => { img.hidden = true; }, {once:true});

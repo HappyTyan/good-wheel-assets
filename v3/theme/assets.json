@@ -1,5 +1,5 @@
 {
-  "version": "3.3.0-stage3d",
+  "version": "3.4.0-stage3e",
   "canvas": {
     "width": 1024,
     "height": 1536,
@@ -21,8 +21,8 @@
     },
     "wheel": {
       "centerX": 50,
-      "centerY": 39,
-      "diameterWidth": 56
+      "centerY": 55,
+      "diameterWidth": 68
     },
     "stand": {
       "top": 55,
@@ -48,6 +48,10 @@
     "rules": {
       "top": 91,
       "height": 8
+    },
+    "controls": {
+      "layout": "normal document flow, outside 2:3 shell",
+      "minButtonHeightPx": 56
     }
   },
   "layers": [
@@ -106,5 +110,5 @@
     }
   ],
   "existingFallback": "v3/img/forest-frame.webp remains the CSS fallback for missing scene.webp",
-  "note": "CSS remains positioning source of truth. Debug output is outside shell; background illustration remains unchanged."
+  "note": "Only the wheel hero uses 1024x1536 percentage positioning. Controls flow below the illustrated hero. scene.webp remains unchanged."
 }
