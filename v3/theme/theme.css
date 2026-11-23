@@ -11,3 +11,6 @@
 .gw-button:disabled{opacity:1;background:linear-gradient(180deg,#5e4371,#49315c 55%,#2a1c3d);color:#e4d3e6;box-shadow:inset 0 1px #fff3}
 .gw-status{margin:4px 0 0;font-size:13px;line-height:1.45}
 @media(max-width:360px){.gw-tokens{gap:7px 9px;padding:9px 5px}.gw-token{width:25px;height:25px}.gw-unlock{font-size:12px}}
+
+/* Stage 2b: optional forest artwork; CSS gradients remain the fallback until the WebP is uploaded. */
+.gw-forest{background-image:linear-gradient(180deg,#100a24aa,#13092777),url("../img/forest-frame.webp");background-size:100% 100%,100% 100%;background-position:center;opacity:1}
