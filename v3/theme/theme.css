@@ -620,3 +620,23 @@
  .gw-controls .gw-actions {gap:6px;}
  .gw-controls .gw-actions button {font-size:10px;padding:5px 3px;}
 }
+
+/* v3.14 composition: music outside artwork, compact instruction, fitted typography */
+.gw-controls .gw-music-row{display:flex;justify-content:flex-end;align-items:center;min-height:28px;margin:0 2px -4px;}
+.gw-controls .gw-music{display:inline-flex;align-items:center;justify-content:center;min-height:29px;min-width:0;padding:4px 11px;border:1px solid #d7a763;border-radius:999px;background:linear-gradient(#4d205e,#2a123f);color:#fbe0a4;font:700 12px/1.1 Georgia,serif;white-space:nowrap;box-shadow:0 1px 5px #10091c;}
+.gw-shell .gw-ribbon{left:23%;width:54%;top:87%;min-height:0;padding:3px 6px;border:0;border-radius:9px;background:linear-gradient(90deg,#24102b99,#2b1136d9,#24102b99);box-shadow:none;}
+.gw-shell .gw-subtitle{font-size:clamp(9px,2.55cqw,12px);line-height:1.13;text-wrap:balance;}
+.gw-title-line{font-size:61px;letter-spacing:-2px;stroke-width:2.2px;}
+.gw-title-line-two{font-size:58px;}
+.gw-shell .gw-header{top:7.3%;height:12.5%;}
+.gw-controls .gw-spin-area{height:74px;display:grid;place-items:center;}
+.gw-controls .gw-button{width:75%;max-width:260px;min-width:0;min-height:0;height:45px;padding:0 5px;font-size:clamp(13px,3.7cqw,19px);letter-spacing:0;line-height:1.05;white-space:nowrap;text-align:center;text-shadow:0 1px 2px #22092f;}
+.gw-controls .gw-button.gw-button-long{width:80%;font-size:clamp(10px,2.9cqw,14px);letter-spacing:-.02em;}
+@media(max-width:370px){
+ .gw-shell .gw-ribbon{left:19%;width:62%;top:87%;}
+ .gw-shell .gw-subtitle{font-size:9px;}
+ .gw-title-line{font-size:57px;}
+ .gw-title-line-two{font-size:54px;}
+ .gw-controls .gw-button{font-size:13px;}
+ .gw-controls .gw-button.gw-button-long{font-size:10px;}
+}

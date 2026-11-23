@@ -13,11 +13,11 @@ export async function mount(root,overlayRoot){
   const image = (name, className, extra="") => '<img class="gw-art '+className+'" src="'+new URL("./img/"+name+".webp",import.meta.url).href+'" alt="" decoding="async" loading="eager" '+extra+'>';
   root.innerHTML = `<section class="gw-shell">
     <div class="gw-scene" aria-hidden="true"><span class="gw-forest"></span>${image("scene","gw-art-scene")}</div>
-    <nav class="gw-topbar" aria-label="Управление"><button class="gw-music" type="button" aria-pressed="false">♫ Музыка: выкл</button></nav>
+    
     <header class="gw-header"><h1 class="gw-title"><svg class="gw-title-svg" viewBox="0 0 900 190" role="img" aria-label="Колесо добрых предсказаний" preserveAspectRatio="xMidYMid meet"><defs><path id="gw-title-arc-1" d="M 105 90 Q 450 12 795 90"/><path id="gw-title-arc-2" d="M 90 153 Q 450 75 810 153"/></defs><text class="gw-title-line gw-title-line-one"><textPath href="#gw-title-arc-1" startOffset="50%" text-anchor="middle">Колесо добрых</textPath></text><text class="gw-title-line gw-title-line-two"><textPath href="#gw-title-arc-2" startOffset="50%" text-anchor="middle">предсказаний</textPath></text></svg></h1></header>
     <div class="gw-ribbon"><p class="gw-subtitle">Поверните волшебное колесо и откройте доброе послание!</p></div>
     <div class="gw-stage"><div class="gw-wheel-rim">${image("wheel-rim","gw-art-rim")}</div><div class="gw-wheel">${renderWheel(debug)}</div><div class="gw-hub">${image("hub","gw-art-hub")}</div><div class="gw-pointer">${image("pointer","gw-art-pointer")}</div></div>
-  </section><section class="gw-controls" aria-label="Управление игрой"><div class="gw-play"><div class="gw-spin-area">${image("spin-button","gw-art-spin")}<button class="gw-button" type="button">КРУТИТЬ КОЛЕСО</button></div>
+  </section><section class="gw-controls" aria-label="Управление игрой"><div class="gw-music-row"><button class="gw-music" type="button" aria-pressed="false">♫ Музыка: выкл</button></div><div class="gw-play"><div class="gw-spin-area">${image("spin-button","gw-art-spin")}<button class="gw-button" type="button">КРУТИТЬ КОЛЕСО</button></div>
       <div class="gw-tokens" aria-label="Пять вращений в сутки">${image("panel-frame","gw-art-panel")}<div class="gw-token-group"><span class="gw-tokens-heading">Ваши вращения сегодня</span>${Array.from({length:5},()=>'<span class="gw-token" aria-hidden="true">'+starSvg+lockSvg+'</span>').join("")}</div>
         <span class="gw-token-divider" aria-hidden="true"></span><div class="gw-timer-group"><span class="gw-clock" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="19" fill="#5c185c" stroke="#ffd469" stroke-width="3"/><path d="M24 11v14l10 6" fill="none" stroke="#ffe48e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="gw-unlock" aria-live="polite"></span></div></div>
       <div class="gw-status" aria-live="polite">Загрузка...</div><div class="gw-error" role="alert"></div>
@@ -32,11 +32,40 @@ export async function mount(root,overlayRoot){
     if (img.complete && img.naturalWidth === 0) img.hidden = true;
   });
   const musicButton = root.querySelector(".gw-music");
-  musicButton.addEventListener("click", () => {
+  let audioContext=null, musicTimer=null, musicStep=0;
+  const melody=[261.63,329.63,392,523.25,440,392,329.63,293.66,261.63,329.63,440,392,349.23,329.63,293.66,261.63];
+  function playMusicNote(){
+    if(!audioContext||audioContext.state!=="running")return;
+    const at=audioContext.currentTime,osc=audioContext.createOscillator(),gain=audioContext.createGain();
+    osc.type="sine";osc.frequency.value=melody[musicStep++%melody.length];
+    gain.gain.setValueAtTime(0.0001,at);
+    gain.gain.exponentialRampToValueAtTime(0.075,at+0.07);
+    gain.gain.exponentialRampToValueAtTime(0.0001,at+0.85);
+    osc.connect(gain);gain.connect(audioContext.destination);
+    osc.start(at);osc.stop(at+0.88);
+  }
+  musicButton.addEventListener("click", async () => {
     const enabled = musicButton.getAttribute("aria-pressed") !== "true";
     musicButton.setAttribute("aria-pressed", String(enabled));
     musicButton.textContent = enabled ? "♫ Музыка: вкл" : "♫ Музыка: выкл";
-    // Stage 3a placeholder only: no audio module or sound playback.
+    if(enabled){
+      try{
+        const AudioCtx=window.AudioContext||window.webkitAudioContext;
+        if(!AudioCtx)throw new Error("Web Audio недоступен");
+        audioContext ||= new AudioCtx();
+        await audioContext.resume();
+        if(musicTimer)clearInterval(musicTimer);
+        playMusicNote();
+        musicTimer=setInterval(playMusicNote,900);
+      }catch(e){
+        musicButton.setAttribute("aria-pressed","false");
+        musicButton.textContent="♫ Музыка недоступна";
+        console.warn(e);
+      }
+    }else{
+      if(musicTimer){clearInterval(musicTimer);musicTimer=null;}
+      if(audioContext)await audioContext.suspend();
+    }
   });
 
   const wheel=root.querySelector(".gw-wheel"),button=root.querySelector(".gw-button"),status=root.querySelector(".gw-status"),error=root.querySelector(".gw-error"),debugEl=root.querySelector(".gw-debug"),tokens=[...root.querySelectorAll(".gw-token")],unlock=root.querySelector(".gw-unlock"),historyButton=root.querySelector(".gw-history");
@@ -49,6 +78,7 @@ export async function mount(root,overlayRoot){
     lastState=value.state;
     button.disabled=value.phase!=="idle"||!value.state?.available;
     button.textContent=value.phase==="idle"&&!value.state?.available?(value.state?.nextUnlockAt?"ОЖИДАНИЕ ВРАЩЕНИЙ":"НА СЕГОДНЯ ВСЁ"):"КРУТИТЬ КОЛЕСО";
+    button.classList.toggle("gw-button-long",button.textContent.length>16);
     status.textContent=`Использовано: ${value.state?.used??0} из 5. Доступно: ${value.state?.available??0}.`+(value.state?.nextUnlockAt?` Ещё вращения после ${new Date(value.state.nextUnlockAt).toLocaleTimeString("ru-RU",{timeZone:CONFIG.dayZone,hour:"2-digit",minute:"2-digit"})} (Корея).`:"");
     error.textContent=value.error||"";
     const used=value.state?.used??0,available=value.state?.available??0;
@@ -112,5 +142,5 @@ export async function mount(root,overlayRoot){
   }});
   button.addEventListener("click",engine.spin);
   if(debug)debugEl.textContent="DEBUG: геометрия 12 × 30°; ожидание ответа mock API";
-  return ()=>{clearInterval(unlockTimer);unsubscribe();root.replaceChildren();overlayRoot.replaceChildren();};
+  return ()=>{if(musicTimer)clearInterval(musicTimer);audioContext?.close();clearInterval(unlockTimer);unsubscribe();root.replaceChildren();overlayRoot.replaceChildren();};
 }
