@@ -551,3 +551,54 @@
   overflow-wrap: normal;
   text-wrap: balance;
 }
+
+/* Approved layered composition: title follows the baked-in gold scroll.
+   Scene stays a static image; wheel and all gameplay remain independent. */
+.gw-shell .gw-header {
+  top: 7.2%;
+  left: 7%;
+  width: 86%;
+  height: 13%;
+  padding: 0;
+  overflow: visible;
+  background: transparent;
+}
+.gw-shell .gw-title {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+  overflow: visible;
+}
+.gw-title-svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.gw-title-line {
+  fill: #fff0b9;
+  stroke: #6c2b35;
+  stroke-width: 3px;
+  paint-order: stroke fill;
+  font: 700 72px Georgia, 'Times New Roman', serif;
+  letter-spacing: -1.5px;
+  filter: drop-shadow(0 3px 2px #361028);
+}
+.gw-title-line-two { font-size: 67px; }
+/* Lift the live SVG wheel above the cat and crystal ball at its foot. */
+.gw-shell .gw-stage {
+  --wheel-y: 47%;
+  --wheel-size: 65%;
+}
+/* The instruction is its own readable layer below the artwork, not on the scroll. */
+.gw-shell .gw-ribbon {
+  top: 82%;
+  left: 9%;
+  width: 82%;
+  height: 8%;
+  padding: 5px 12px;
+  border-radius: 14px;
+  z-index: 16;
+}
+.gw-shell .gw-subtitle { font-size: clamp(11px, 3.2cqw, 16px); line-height: 1.15; }
+@media (max-width: 360px) {
+  .gw-shell .gw-ribbon { left: 7%; width: 86%; padding: 4px 9px; }
+  .gw-shell .gw-subtitle { font-size: clamp(10px, 3.1cqw, 13px); }
+}
