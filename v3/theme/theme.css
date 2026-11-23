@@ -675,3 +675,21 @@
  .gw-title-line-two{font-size:40px;}
  .gw-shell .gw-ribbon{top:81.5%;left:19%;width:62%;}
 }
+
+/* v3.17: align the two title lines with the actual gold ribbon geometry.
+   Do not shrink the whole title container: that also shrinks SVG text. */
+.gw-shell .gw-header{top:6.35%;left:7%;width:86%;height:12.8%;overflow:visible;}
+.gw-title-svg{overflow:visible;}
+.gw-title-line{font-size:58px;letter-spacing:-1.2px;stroke-width:1.7px;}
+.gw-title-line-two{font-size:54px;}
+/* Remove the translucent circular plate from the rim image, keeping its
+   decorative outer ring. The SVG sectors and central hub remain unchanged. */
+.gw-stage .gw-art-rim{
+  -webkit-mask-image:radial-gradient(circle at center,transparent 0 40%,#000 45% 51%,transparent 54%);
+  mask-image:radial-gradient(circle at center,transparent 0 40%,#000 45% 51%,transparent 54%);
+}
+@media(max-width:370px){
+ .gw-shell .gw-header{top:6.35%;left:7%;width:86%;height:12.8%;}
+ .gw-title-line{font-size:56px;}
+ .gw-title-line-two{font-size:52px;}
+}

@@ -14,7 +14,7 @@ export async function mount(root,overlayRoot){
   root.innerHTML = `<section class="gw-shell">
     <div class="gw-scene" aria-hidden="true"><span class="gw-forest"></span>${image("scene","gw-art-scene")}</div>
     
-    <header class="gw-header"><h1 class="gw-title"><svg class="gw-title-svg" viewBox="0 0 900 190" role="img" aria-label="Колесо добрых предсказаний" preserveAspectRatio="xMidYMid meet"><defs><path id="gw-title-arc-1" d="M 105 90 Q 450 12 795 90"/><path id="gw-title-arc-2" d="M 90 153 Q 450 75 810 153"/></defs><text class="gw-title-line gw-title-line-one"><textPath href="#gw-title-arc-1" startOffset="50%" text-anchor="middle">Колесо добрых</textPath></text><text class="gw-title-line gw-title-line-two"><textPath href="#gw-title-arc-2" startOffset="50%" text-anchor="middle">предсказаний</textPath></text></svg></h1></header>
+    <header class="gw-header"><h1 class="gw-title"><svg class="gw-title-svg" viewBox="0 0 900 190" role="img" aria-label="Колесо добрых предсказаний" preserveAspectRatio="xMidYMid meet"><defs><path id="gw-title-arc-1" d="M 105 82 Q 450 24 795 82"/><path id="gw-title-arc-2" d="M 90 134 Q 450 76 810 134"/></defs><text class="gw-title-line gw-title-line-one"><textPath href="#gw-title-arc-1" startOffset="50%" text-anchor="middle">Колесо добрых</textPath></text><text class="gw-title-line gw-title-line-two"><textPath href="#gw-title-arc-2" startOffset="50%" text-anchor="middle">предсказаний</textPath></text></svg></h1></header>
     <div class="gw-ribbon"><p class="gw-subtitle">Поверните волшебное колесо и откройте доброе послание!</p></div>
     <div class="gw-stage"><div class="gw-wheel-rim">${image("wheel-rim","gw-art-rim")}</div><div class="gw-wheel">${renderWheel(debug)}</div><div class="gw-hub">${image("hub","gw-art-hub")}</div><div class="gw-pointer">${image("pointer","gw-art-pointer")}</div></div>
   </section><section class="gw-controls" aria-label="Управление игрой"><div class="gw-music-row"><button class="gw-music" type="button" aria-pressed="false">♫ Музыка: выкл</button></div><div class="gw-play"><div class="gw-spin-area">${image("spin-button","gw-art-spin")}<button class="gw-button" type="button">КРУТИТЬ КОЛЕСО</button></div>
@@ -32,28 +32,53 @@ export async function mount(root,overlayRoot){
     if (img.complete && img.naturalWidth === 0) img.hidden = true;
   });
   const musicButton = root.querySelector(".gw-music");
-  // Approved Suno soundtrack, previously hosted and tested on GitHub Pages.
-  const soundtrack = new Audio("https://happytyan.github.io/good-wheel-assets/background-preview.mp3");
-  soundtrack.loop = true;
-  soundtrack.preload = "none";
-  soundtrack.volume = 0.48;
+  // Three previously approved and tested audio assets.
+  const audioBase = "https://happytyan.github.io/good-wheel-assets/";
+  const backgroundMusic = new Audio(audioBase + "background-preview.mp3");
+  const spinMusic = new Audio(audioBase + "spin-chime.mp3");
+  const resultMusic = new Audio(audioBase + "result-chime.mp3");
+  backgroundMusic.loop = true;
+  backgroundMusic.volume = 0.48;
+  spinMusic.volume = 0.75;
+  resultMusic.volume = 0.82;
+  let musicEnabled = false;
+  let spinAudioActive = false;
+  const safePlay = audio => audio.play().catch(error => console.warn("Audio playback unavailable", audio.src, error));
+  function stopAudio(audio) { audio.pause(); audio.currentTime = 0; }
+  function startSpinAudio() {
+    if (!musicEnabled) return;
+    spinAudioActive = true;
+    backgroundMusic.pause();
+    stopAudio(resultMusic);
+    stopAudio(spinMusic);
+    void safePlay(spinMusic);
+  }
+  function playResultAudio() {
+    if (!musicEnabled) return;
+    spinAudioActive = false;
+    stopAudio(spinMusic);
+    stopAudio(resultMusic);
+    void safePlay(resultMusic);
+  }
+  function resumeBackgroundAudio() {
+    spinAudioActive = false;
+    if (musicEnabled) void safePlay(backgroundMusic);
+  }
   musicButton.addEventListener("click", async () => {
-    const enabled = musicButton.getAttribute("aria-pressed") !== "true";
-    if (enabled) {
-      try {
-        await soundtrack.play();
-        musicButton.setAttribute("aria-pressed", "true");
-        musicButton.textContent = "♫ Музыка: вкл";
-      } catch (error) {
-        musicButton.setAttribute("aria-pressed", "false");
-        musicButton.textContent = "♫ Музыка недоступна";
-        console.warn("Approved soundtrack failed to play", error);
-      }
+    if (musicEnabled) {
+      musicEnabled = false;
+      [backgroundMusic, spinMusic, resultMusic].forEach(audio => audio.pause());
     } else {
-      soundtrack.pause();
-      musicButton.setAttribute("aria-pressed", "false");
-      musicButton.textContent = "♫ Музыка: выкл";
+      try {
+        await backgroundMusic.play();
+        musicEnabled = true;
+      } catch (error) {
+        console.warn("Background music unavailable", error);
+        musicEnabled = false;
+      }
     }
+    musicButton.setAttribute("aria-pressed", String(musicEnabled));
+    musicButton.textContent = musicEnabled ? "♫ Музыка: вкл" : "♫ Музыка: выкл";
   });
 
   const wheel=root.querySelector(".gw-wheel"),button=root.querySelector(".gw-button"),status=root.querySelector(".gw-status"),error=root.querySelector(".gw-error"),debugEl=root.querySelector(".gw-debug"),tokens=[...root.querySelectorAll(".gw-token")],unlock=root.querySelector(".gw-unlock"),historyButton=root.querySelector(".gw-history");
@@ -82,7 +107,7 @@ export async function mount(root,overlayRoot){
       panel.querySelector("h2").textContent=prediction.title;
       panel.querySelector(".gw-text").textContent=prediction.text;
       panel.querySelector(".gw-advice").textContent="Совет дня: "+prediction.advice;
-      const close=()=>{panel.remove();resolve();};
+      const close=()=>{panel.remove();resumeBackgroundAudio();resolve();};
       panel.querySelector("button").addEventListener("click",close,{once:true});
       overlayRoot.append(panel);
     });
@@ -125,10 +150,10 @@ export async function mount(root,overlayRoot){
       pointer.classList.remove("gw-pointer-celebrate");
     }
   }
-  const engine=createSpinEngine({api,store,animate,showResult,onSettled:illuminateWinningSector,onPlan:({sectorIndex,finalRotation})=>{
+  const engine=createSpinEngine({api,store,animate,showResult,onError:resumeBackgroundAudio,onSettled:async args=>{playResultAudio();await illuminateWinningSector(args);},onPlan:({sectorIndex,finalRotation})=>{startSpinAudio();
     if(debug)debugEl.textContent=`API sectorIndex: ${sectorIndex}; finalRotation: ${finalRotation.toFixed(4)}°; под указателем: ${sectorAtRotation(finalRotation)}`;
   }});
   button.addEventListener("click",engine.spin);
   if(debug)debugEl.textContent="DEBUG: геометрия 12 × 30°; ожидание ответа mock API";
-  return ()=>{soundtrack.pause();soundtrack.src="";clearInterval(unlockTimer);unsubscribe();root.replaceChildren();overlayRoot.replaceChildren();};
+  return ()=>{[backgroundMusic,spinMusic,resultMusic].forEach(audio=>{audio.pause();audio.removeAttribute("src");audio.load();});clearInterval(unlockTimer);unsubscribe();root.replaceChildren();overlayRoot.replaceChildren();};
 }

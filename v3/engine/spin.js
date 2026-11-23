@@ -1,6 +1,6 @@
 import { planStop } from "./geometry.js";
 import { CONFIG } from "../config.js";
-export function createSpinEngine({api,store,animate,showResult,onPlan=()=>{},onSettled=async()=>{}}){
+export function createSpinEngine({api,store,animate,showResult,onPlan=()=>{},onSettled=async()=>{},onError=()=>{}}){
   let rotation=0,activeKey=null;
   async function spin(){
     if(store.get().phase!=="idle")return;
@@ -19,6 +19,7 @@ export function createSpinEngine({api,store,animate,showResult,onPlan=()=>{},onS
       await showResult(result.prediction);
       activeKey=null;store.set({phase:"idle"});
     }catch(error){
+      onError();
       store.set({phase:"idle",error:error.message||"Не удалось выполнить вращение"});
     }
   }
