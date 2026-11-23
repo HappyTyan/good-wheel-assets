@@ -1,5 +1,5 @@
 {
-  "version": "3.2.0-stage3c",
+  "version": "3.3.0-stage3d",
   "canvas": {
     "width": 1024,
     "height": 1536,
@@ -21,29 +21,29 @@
     },
     "wheel": {
       "centerX": 50,
-      "centerY": 38,
+      "centerY": 39,
       "diameterWidth": 56
     },
     "stand": {
-      "top": 54,
+      "top": 55,
       "height": 5
     },
     "spin": {
-      "top": 58,
+      "top": 59,
       "height": 6,
       "width": 86
     },
     "tokens": {
-      "top": 66,
-      "height": 8
+      "top": 67,
+      "height": 11
     },
     "actions": {
-      "top": 77,
-      "height": 6
+      "top": 79,
+      "height": 5
     },
     "banner": {
-      "top": 84,
-      "height": 6
+      "top": 85,
+      "height": 5
     },
     "rules": {
       "top": 91,
@@ -106,5 +106,5 @@
     }
   ],
   "existingFallback": "v3/img/forest-frame.webp remains the CSS fallback for missing scene.webp",
-  "note": "Stage 3c adjusts layout and text contrast only. scene.webp still contains oversized baked-in cat, orb, lantern and decorative title: regenerate artwork separately. CSS is runtime source of truth."
+  "note": "CSS remains positioning source of truth. Debug output is outside shell; background illustration remains unchanged."
 }
