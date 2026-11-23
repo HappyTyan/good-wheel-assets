@@ -27,3 +27,22 @@
 .gw-tokens{border-color:#e6ad6888;box-shadow:inset 0 1px 7px #e1a25b22}
 .gw-banner{border-color:#c79b5caa;background:linear-gradient(100deg,#3d2059aa,#25113eb8,#3d2059aa)}
 @media(max-width:360px){.gw-stage{width:84%}.gw-pointer{top:-20px}}
+
+
+/* Stage 2e: visual controls only. Spin geometry and mock API remain unchanged. */
+.gw-play{margin-top:26px}
+.gw-button{min-height:66px;letter-spacing:.015em;border-width:3px;border-radius:999px;box-shadow:inset 0 2px 2px #ffe3fa99,inset 0 -3px 5px #27003599,0 0 0 3px #7b3b66aa,0 4px 18px #d84cf355,0 7px 12px #0008}
+.gw-button:focus-visible,.gw-actions button:focus-visible{outline:3px solid #fff0ad;outline-offset:3px}
+.gw-tokens{position:relative;gap:8px 12px;min-height:88px;padding:16px 10px 10px;border:2px solid #d6a35f;border-radius:22px;background:linear-gradient(120deg,#2a143cdd,#1a1037ed 50%,#391740dd);box-shadow:inset 0 2px 9px #ffe0a01b,0 3px 8px #0005}
+.gw-token{width:34px;height:34px;clip-path:polygon(50% 0,61% 34%,98% 35%,69% 57%,79% 94%,50% 73%,21% 94%,31% 57%,2% 35%,39% 34%);background:linear-gradient(140deg,#fff8b6 10%,#ffc547 42%,#d58417 85%);opacity:1;filter:drop-shadow(0 0 5px #ffbe59)}
+.gw-token-used{background:linear-gradient(140deg,#877a9d,#49405c);opacity:.52;filter:none}
+.gw-token-locked{background:linear-gradient(140deg,#b0a2ce,#665179);opacity:.78;filter:none}
+.gw-token-locked:after{content:"";position:absolute;left:37%;top:37%;width:26%;height:26%;border:1.5px solid #f6e6cd;border-radius:2px;background:#f6e6cd;box-shadow:0 -5px 0 -2px #54466c}
+.gw-unlock{color:#ffe3a1;font-size:13px;letter-spacing:.01em}
+.gw-status{margin:10px 0 0;font-size:13px;color:#fff0c8}
+.gw-actions{gap:10px;margin:17px 0}
+.gw-actions button{min-height:58px;border:2px solid #dfae65;border-radius:999px;background:linear-gradient(180deg,#7d378f,#54206d 52%,#28113f);box-shadow:inset 0 2px 2px #fff5b833,0 3px 8px #0007;color:#fff2c6;font:700 clamp(12px,3.4vw,15px) Georgia,serif;text-shadow:0 1px 2px #1c072a}
+.gw-actions button:disabled{opacity:.8;cursor:not-allowed}
+.gw-badge{vertical-align:middle;margin-left:3px;padding:2px 6px;border:1px solid #f7a2aa;border-radius:999px;background:#a92755;color:#fff;font:700 10px Arial,sans-serif;text-shadow:none}
+.gw-banner{min-height:80px;border:2px solid #d5a45e;border-radius:19px;background:linear-gradient(105deg,#4a175cdd,#73226bce 48%,#3a164cdd);box-shadow:inset 0 2px 4px #ffd78b33,0 4px 12px #0005;color:#ffe6b2;font:600 14px/1.35 Georgia,serif;text-shadow:0 1px 2px #1b062a}
+@media(max-width:360px){.gw-button{min-height:58px}.gw-tokens{gap:7px 8px;padding:12px 5px 9px;min-height:80px}.gw-token{width:27px;height:27px}.gw-actions{gap:6px}.gw-actions button{padding:7px 4px;font-size:12px}.gw-banner{min-height:70px}}
