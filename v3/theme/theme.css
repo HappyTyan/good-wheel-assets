@@ -640,3 +640,25 @@
  .gw-controls .gw-button{font-size:13px;}
  .gw-controls .gw-button.gw-button-long{font-size:10px;}
 }
+
+/* v3.15: coordinated mobile composition, preserving approved artwork. */
+.gw-shell .gw-ribbon{top:83.8%;left:22%;width:56%;padding:3px 5px;}
+.gw-shell .gw-subtitle{font-size:clamp(9px,2.6cqw,12px);line-height:1.15;}
+/* Both SVG title lines fit within the curved golden ribbon. */
+.gw-title-line{font-size:53px;letter-spacing:-2px;stroke-width:2px;}
+.gw-title-line-two{font-size:50px;}
+.gw-shell .gw-header{top:7.1%;height:12.5%;left:8%;width:84%;}
+/* Wheel artwork must not show a rectangular image canvas. */
+.gw-stage .gw-wheel-rim{border-radius:50%;clip-path:circle(50% at 50% 50%);}
+.gw-stage .gw-art-rim{border-radius:50%;}
+.gw-stage .gw-wheel{border-radius:50%;clip-path:circle(50% at 50% 50%);}
+.gw-stage .gw-wheel-svg{background:transparent;}
+/* Tight music toolbar, no oversized empty gap. */
+.gw-controls .gw-music-row{min-height:23px;height:23px;margin:0 2px -8px;}
+.gw-controls .gw-music{min-height:23px;height:23px;padding:2px 8px;font-size:10px;line-height:1;}
+.gw-controls{gap:8px;padding-top:8px;}
+@media(max-width:370px){
+ .gw-shell .gw-ribbon{top:83.5%;left:19%;width:62%;}
+ .gw-title-line{font-size:50px;}
+ .gw-title-line-two{font-size:47px;}
+}
