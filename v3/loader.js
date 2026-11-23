@@ -1,6 +1,6 @@
 // Single resource revision for CSS and the complete ES module graph.
 const ROOT_ID = "gw-root";
-const VERSION = "3.13.0-interface-audit";
+const VERSION = "3.14.0-composition-audio";
 const BASE = new URL("./", import.meta.url);
 const resource = path => {
   const url = new URL(path, BASE);
