@@ -89,7 +89,25 @@ export async function mount(root,overlayRoot){
     wheel.style.transform=`rotate(${to}deg)`;motion.cancel();
     if(debug)debugEl.textContent+=`; фактически под указателем: ${sectorAtRotation(to)}; до границы: ${angularDistanceToBoundary(to).toFixed(2)}°`;
   }
-  const engine=createSpinEngine({api,store,animate,showResult,onPlan:({sectorIndex,finalRotation})=>{
+  async function illuminateWinningSector({sectorIndex}) {
+    const sector=wheel.querySelector('.gw-sector-fill[data-sector="'+sectorIndex+'"]');
+    const pointer=root.querySelector(".gw-pointer");
+    if (!sector || !pointer) return;
+    const icon=wheel.querySelector('.gw-sector-sprite[data-sector="'+sectorIndex+'"]');
+    sector.classList.add("gw-sector-winning");
+    icon?.classList.add("gw-icon-winning");
+    pointer.classList.add("gw-pointer-celebrate");
+    try {
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        await new Promise(resolve=>setTimeout(resolve,1500));
+      }
+    } finally {
+      sector.classList.remove("gw-sector-winning");
+      icon?.classList.remove("gw-icon-winning");
+      pointer.classList.remove("gw-pointer-celebrate");
+    }
+  }
+  const engine=createSpinEngine({api,store,animate,showResult,onSettled:illuminateWinningSector,onPlan:({sectorIndex,finalRotation})=>{
     if(debug)debugEl.textContent=`API sectorIndex: ${sectorIndex}; finalRotation: ${finalRotation.toFixed(4)}°; под указателем: ${sectorAtRotation(finalRotation)}`;
   }});
   button.addEventListener("click",engine.spin);
